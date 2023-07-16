@@ -1,7 +1,7 @@
 import './App.css';
 import Form from './components/Form';
 import { Routes,BrowserRouter, Route,Navigate } from 'react-router-dom';
-
+import LoginPage from './pages/login';
 function App() {
 
 
@@ -12,6 +12,7 @@ function App() {
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to='/signup'/>} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<Form />} />
       </Routes>
       </BrowserRouter>
