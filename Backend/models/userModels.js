@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
@@ -8,7 +7,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minLength: [5, "name should be atleast 5 characters long"],
+      minLength: [5, "name should be at least 5 characters long"],
       maxLength: [15, "Name should be within 15 characters"],
     },
     email: {
@@ -31,7 +30,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: [true, "username already exists"],
-      minLength: [6, "username should be atlest 6 characters long"],
+      minLength: [6, "username should be at least 6 characters long"],
     },
   },
   {
@@ -39,7 +38,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// has password
+// hash password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
@@ -47,19 +46,6 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   return next();
 });
-
-// method to generate token
-userSchema.methods = {
-  jwtToken() {
-    return JWT.sign(
-      { id: this._id, username: this.username, email: this.email },
-      process.env.SECRET,
-      {
-        expiresIn: "24d",
-      }
-    );
-  },
-};
 
 const userModel = mongoose.model("user", userSchema);
 module.exports = userModel;

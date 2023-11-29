@@ -1,5 +1,5 @@
 const userModel = require("../models/userModels");
-const emialValidator = require("email-validator");
+const emailValidator = require("email-validator");
 const bcrypt = require("bcrypt");
 
 // signup controller
