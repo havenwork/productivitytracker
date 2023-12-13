@@ -6,14 +6,6 @@ import email_svg from '../icons/email.svg'
 import logo_svg from '../icons/logo.svg'
 import lock_svg from '../icons/lock.svg'
 
-import BottomState from '../components/BottomState'
-import Connections from '../components/Connections'
-import Dock from '../components/Dock'
-import LeftPane from '../components/LeftPane'
-import RigntPane from '../components/RightPane'
-import Stat from '../components/Stat'
-import TopState from '../components/TopStats'
-
 
 const SignupForm = ({submitForm}) => {
     const[values, setValues] = useState({
@@ -26,10 +18,10 @@ const SignupForm = ({submitForm}) => {
     const [dataIsCorrect, setDataIsCorrect] = useState(false);
 
     const handleChange = (event) =>{
-       setValues({
+      setValues({
         ...values,
         [event.target.name]: event.target.value,
-       });
+      });
     };
     const handleFormSubmit = (event) =>{
         event.preventDefault();
@@ -69,31 +61,24 @@ const SignupForm = ({submitForm}) => {
           <span className="font-light text-gray-800 mb-8">
             Activate your access: Sign up for a seamless experience.
           </span>
-
         
-        <div className="flex justify-between items-center pt-6">
-          <hr className="w-full border-gray-400" />
-          <span className="px-4 font-light tracking-wider text-gray-500">or</span>
-          <hr className="w-full border-gray-400" />
-        </div>
         <form action="">
-          <div className="pt-6">
+          <div className="pt-6 mt-2 ">
             <label for="email" className="font-light">Full name</label>
             <div className="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
-              <div className="flex justify-center items-center pl-6">
+            <div className="flex self-end p-0 ">
+            <img src={logo_svg} alt="Logo" className="w-32 absolute top-0 right-0 "/>
+          </div>
+              <div className="flex justify-center items-center pl-0">
               <email_svg className="w-6 h-6 pointer-events-none" />
               </div>
               <input
-                type="text"
-                name="email"
-                id="email"
-                placeholder="Enter your name"
-                className="px-4 py-4.5 w-full focus:outline-none font-light border-0 focus:ring-0"
+                type="text" name="email" id="email" placeholder="Enter your name" className="px-4 py-2 w-full focus:outline-none font-light border-0 focus:ring-0"
               />
             </div>
           </div>
-          </form>
-          <div action="" className="pt-6 mt-5 ">
+          </form>  
+          <div action="" className="pt-6 mt-2 ">
             <div className="mb-0">
               <label for="email" class="font-light">Email address</label>
               <div class="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
@@ -103,20 +88,25 @@ const SignupForm = ({submitForm}) => {
                 <div class="flex justify-center items-center pl-0">
                   <email_svg className="w-6 h-6 pointer-events-none" />
                 </div>
-                <input type="text" name="email" id="email" placeholder="Enter yor email" class="px-4 py-4.5 w-full focus:outline-none font-light border-0 focus:ring-0"/>
+                <input type="text" name="email" id="email" placeholder="Enter yor email" class="px-4 py-2 w-full focus:outline-none font-light border-0 focus:ring-0"/>
               </div>
             </div>
-            <form action="" className="pt-6 mt-5 ">
+            <form action="" className="pt-2 mt-2 ">
             <div className="mb-0">
-              <label for="password" class="font-light">Password</label>
-              <div className="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
-                <div className="flex justify-center items-center pl-6">
-                <lock_svg className="w-6 h-6 pointer-events-none" />
-                </div>
-                <input type="password" name="password" id="password" placeholder="Enter your password" class="px-4 py-4.5 w-full focus:outline-none font-light border-0 focus:ring-0"/>
+            
               </div>
+              <div className="pt-6">
+            <label for="password" className="font-light">Password</label>
+            <div className="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
+            <div className="flex justify-center items-center pl-3">
+                <img src={lock_svg} alt="logo" className="w-5h-5"/>
+              </div>  
+              <div className="flex justify-center items-center pl-0">
+              <lock_svg className="w-6 h-6 pointer-events-none" />
               </div>
-          
+              <input type="password" name="password" id="password" placeholder="Enter your password" className="px-4 py-2 w-full focus:outline-none font-light border-0 focus:ring-0"/>
+            </div>
+          </div>
           <div className="flex justify-between items-center pt-3">
             <div className="flex items-center">
               <input type="checkbox" name="remember" id="remember" class="w-5 h-5 text-orange-500 bg-white rounded border border-gray-400 focus:outline-none focus:ring-orange-500"/>
@@ -124,7 +114,7 @@ const SignupForm = ({submitForm}) => {
                 Remember me
               </label>
             </div>
-            <a href="#" class="text-teal-500 hover:text-teal-600"> Forgot password</a>
+            
           </div>
           <div class="pt-8">
             <button type="submit" class="py-4 px-8 w-full text bg-red-500 text-white rounded-lg shadow-lg hover:bg-orange-900 focus:ring-4 focus:ring-red-300 focus:outline-none">
@@ -132,14 +122,7 @@ const SignupForm = ({submitForm}) => {
             </button>
           </div>
         </form>
-        <div class="pt-4">
-          <div class="font-light text-center text-gray-500">
-            Not registered yet?
-            <a href="#" class="font-normal text-teal-500 hover:text-teal-600">
-              Create an Account
-            </a>
-          </div>
-        </div>
+        
       </div>
     </div>
   </div>

@@ -1,13 +1,13 @@
 import React from 'react';
 
-const Connections = () => {
-  const connections = [
-    { name: "Manual Rigs", status: "connected" },
-    { name: "Changelog", status: "connected" },
-    { name: "Airlock", status: "connected" },
-    { name: "Wing", status: "connected" },
-  ];
+const connections = [
+  { name: 'Manual Rigs', status: 'connected' },
+  { name: 'Changelog', status: 'connected' },
+  { name: 'Airlock', status: 'connected' },
+  { name: 'Wing', status: 'connected' },
+];
 
+const MyComponent = () => {
   return (
     <div className="w-40 mt-8 ml-16">
       <div className="py-3 text-gray-600 uppercase border-b border-gray-600 text-xs">
@@ -25,4 +25,5 @@ const Connections = () => {
   );
 };
 
-export default Connections;
+export default MyComponent;
+

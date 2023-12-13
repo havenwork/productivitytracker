@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
-const Stat = ({ stats, size }) => {
-  const { gauge, title, value, unit } = stats;
+const GaugeStat = ({ stats, size }) => {
+  const gauge = stats.gauge;
 
   const gaugeColor = useMemo(() => {
     if (gauge >= 0 && gauge < 30) {
@@ -36,15 +36,22 @@ const Stat = ({ stats, size }) => {
         viewBox="0 0 152 152"
         fill="none"
       >
-        {/* ... Paths go here ... */}
+        {/* ... (SVG paths) ... */}
       </svg>
       <div className="flex flex-col items-center justify-center pt-3 text-white">
-        <span className={`uppercase ${size === 'md' ? 'text-xxs' : 'text-xxxs'}`}>{title}</span>
-        <span className={`leading-tight ${size === 'md' ? 'text-3xl' : 'text-2xl'}`}>{value}</span>
-        <span className={`leading-normal ${size === 'md' ? 'text-xl' : 'text-base'}`}>{unit}</span>
+        <span className={`uppercase ${size === 'md' ? 'text-xxs' : 'text-xxxs'}`}>
+          {stats.title}
+        </span>
+        <span className={`leading-tight ${size === 'md' ? 'text-3xl' : 'text-2xl'}`}>
+          {stats.value}
+        </span>
+        <span className={`leading-normal ${size === 'md' ? 'text-xl' : 'text-base'}`}>
+          {stats.unit}
+        </span>
       </div>
     </div>
   );
 };
 
-export default Stat;
+export default GaugeStat;
+

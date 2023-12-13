@@ -11,7 +11,7 @@ const ForgotPassword = () => {
   return (
     <div className="font-sans bg-gray-100">
       <div className="flex justify-between min-h-screen">
-        <div className="hidden relative w-1/2 bg-center bg-cover lg:block" style={{backgroundImage: `url(hero_png)` }}>
+        <div className="hidden relative w-1/2 bg-center bg-cover lg:block" style={{backgroundImage: `url(${hero_png})` }}>
           <div className="flex absolute bottom-20 justify-center w-full">
             <div className="max-w-md text-center">
               <span className="text-3xl font-bold leading-loose text-gray-900">
@@ -39,13 +39,25 @@ const ForgotPassword = () => {
                 Ready, set, login! Your personalized experience awaits.
               </span>
 
-              <div className="flex justify-between items-center pt-6">
-                <hr className="w-full border-gray-400" />
-                <span className="px-4 font-light tracking-wider text-gray-500">or</span>
-                <hr className="w-full border-gray-400" />
-              </div>
+              
               <form action="" className="pt-6 mt-5">
-                {/* Rest of the form code */}
+              <div className="mb-0">
+            <label for="email" className="font-light">Email address</label>
+            <div className="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
+              <div className="flex justify-center items-center pl-3">
+                <img src={email_svg} alt="logo" className="w-5h-5"/>
+              </div>
+              <div className="flex justify-center items-center pl-0">
+                <email_svg className="w-6 h-6 pointer-events-none" />
+              </div>
+              <input type="text" name="email" id="email" placeholder="Enter your email" className="px-4 py-2 w-full focus:outline-none font-light border-0 focus:ring-0"/>
+            </div>
+            <div class="pt-8">
+            <button type="submit" class="py-4 px-8 w-full text bg-red-500 text-white rounded-lg shadow-lg hover:bg-orange-900 focus:ring-4 focus:ring-red-300 focus:outline-none">
+              Reset Password
+            </button>
+          </div>
+          </div>
               </form>
               <div className="pt-4">
                 <div className="font-light text-center text-gray-500">

@@ -1,49 +1,48 @@
 import React from 'react';
 
-const LeftPane = () => {
-  const leftPane = [
-    {
-      title: "All Systems Check",
-      status: "normal",
-    },
-    {
-      title: "Rendezvous burn slow",
-      status: "normal",
-    },
-    {
-      title: "Prepare rendezvous burn",
-      status: "normal",
-    },
-    {
-      title: "Thermal shield",
-      status: "applied",
-    },
-    {
-      title: "Burn Go/No-GO",
-      status: "normal",
-    },
-    {
-      title: "Power completion",
-      status: "awaiting",
-    },
-    {
-      title: "Station deck check",
-      status: "normal",
-    },
-  ];
+const leftPane = [
+  {
+    title: 'All Systems Check',
+    status: 'normal',
+  },
+  {
+    title: 'Rendezvous burn slow',
+    status: 'normal',
+  },
+  {
+    title: 'Prepare rendezvous burn',
+    status: 'normal',
+  },
+  {
+    title: 'Thermal shield',
+    status: 'applied',
+  },
+  {
+    title: 'Burn Go/No-GO',
+    status: 'normal',
+  },
+  {
+    title: 'Power completion',
+    status: 'awaiting',
+  },
+  {
+    title: 'Station deck check',
+    status: 'normal',
+  },
+];
 
-  const iconColors = {
-    applied: "text-green",
-    awaiting: "text-yellow",
-  };
+const iconColors = {
+  applied: 'text-green',
+  awaiting: 'text-yellow',
+};
+const labelColors = {
+  applied: 'text-white',
+  awaiting: 'text-white',
+};
 
-  const labelColors = {
-    applied: "text-white",
-    awaiting: "text-white",
-  };
-
-  const getIconColor = (status) => iconColors[status] || "text-gray-600";
-  const getLabelColor = (status) => labelColors[status] || "text-gray-600/50";
+const MyComponent = () => {
+  const getIconColor = (status) => iconColors[status] || 'text-gray-600';
+  const getLabelColor = (status) => labelColors[status] || 'text-gray-600/50';
 
   return (
     <div className="w-64 space-y-11">
@@ -74,4 +73,5 @@ const LeftPane = () => {
   );
 };
 
-export default LeftPane;
+export default MyComponent;
+
