@@ -7,7 +7,7 @@ const authenticateUser = (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: "Authorization required. Please log in.",
+      message: "Please log in.",
     });
   }
 
