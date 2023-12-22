@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,10 +19,16 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
     },
     password: {
-      required: true,
       type: String,
-      select: false,
+      required: [true, 'Please enter a password.'],
+      minlength: 8
     },
+    confirmPassword: {
+        type: String,
+        required: [true, 'Please confirm your password.']
+    },
+    passwordResetToken:String,
+    passwordResetTokenExpires:Date,
     bio: {
       type: String,
       required: true,
@@ -47,5 +55,7 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
+
 const userModel = mongoose.model("user", userSchema);
 module.exports = userModel;
+  

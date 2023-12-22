@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const databaseConnect = require("./config/db_config");
 const { userRoute } = require("./routers/authRouters");
+
 require("dotenv").config({path:"./config.env"});
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use("/", userRoute);
+
 app.use("/home", (req, res) => {
   res.status(200).json({
     data: "user management like application",

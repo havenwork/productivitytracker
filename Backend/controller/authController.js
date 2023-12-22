@@ -1,5 +1,7 @@
+
 const userModel = require("../models/userModels");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 
 // signup controller
@@ -22,7 +24,7 @@ const signup = async (req, res) => {
 
 // login controller
 
-const jwt = require('jsonwebtoken');
+
 
 
 const login = async (req, res) => {
@@ -91,6 +93,14 @@ const getUser = async (req, res) => {
 
 
 
+
+
+
+
+// exports.resetPassword=(req,res,next)={
+
+// }
+  
 module.exports = {
   signup,
   login,
