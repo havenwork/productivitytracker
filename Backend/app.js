@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const databaseConnect = require("./config/db_config");
 const { userRoute } = require("./routers/authRouters");
+const { goalRoute } = require("./routers/goalRouters");
 require("dotenv").config();
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use("/", userRoute);
+app.use("/goal", goalRoute);
 app.use("/home", (req, res) => {
   res.status(200).json({
     data: "Instagram user management like application",
