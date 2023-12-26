@@ -1,5 +1,6 @@
 const JWT = require("jsonwebtoken");
 
+
 const authenticateUser = (req, res, next) => {
   const token = req.cookies && req.cookies.token;
 
