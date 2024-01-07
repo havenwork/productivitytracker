@@ -31,7 +31,47 @@ const goals = async (req, res) => {
     }
 };
 
+const updateGoal = async (req, res) => {
+    try {
+        const result = await goalModel.updateOne({ _id: req.body.goalId }, req.body);
+        if (result.modifiedCount === 1) {
+            res.status(200).json({
+                msg: "success",
+                data: "Goal Updated Successfully",
+            });
+        } else {
+            res.status(400).json({
+                msg: "error",
+                data: "Goal Not Found",
+            });
+        }
+    } catch (error) {
+        res.status(400).json({ msg: false });
+    }
+}
+
+const deleteGoal = async (req, res) => {
+    try {
+        const result = await goalModel.deleteOne({ _id: req.body.goalId });
+        if (result.deletedCount === 1) {
+            res.status(200).json({
+                msg: "success",
+                data: "Goal Deleted Successfully",
+            });
+        } else {
+            res.status(400).json({
+                msg: "error",
+                data: "Goal Not Found",
+            });
+        }
+    } catch (error) {
+        res.status(400).json({ msg: false });
+    }
+}
+
 module.exports = {
     createGoal,
     goals,
+    updateGoal,
+    deleteGoal,
 };
