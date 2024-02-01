@@ -4,7 +4,8 @@ const cookieParser = require("cookie-parser");
 const databaseConnect = require("./config/db_config");
 const { userRoute } = require("./routers/authRouters");
 const { goalRoute } = require("./routers/goalRouters");
-const { taskRouter } = require("./routers/taskRouters");
+const { taskRoute } = require("./routers/taskRouters");
+const { categoryRoute } = require("./routers/categoryRouters");
 
 require("dotenv").config({ path: "./config.env" });
 
@@ -21,7 +22,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/", userRoute);
 app.use("/goal", goalRoute);
-app.use("/task", taskRouter);
+app.use("/task", taskRoute);
+app.use("/category", categoryRoute);
 
 app.use("/home", (req, res) => {
   res.status(200).json({
