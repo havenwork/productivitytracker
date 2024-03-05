@@ -1,19 +1,29 @@
 import './App.css';
-import Form from './components/Form';
+
 import { Routes,BrowserRouter, Route,Navigate } from 'react-router-dom';
 import LoginPage from './pages/login';
-function App() {
+import SignupForm from './pages/SignupForm';
+import ForgotPassword from './pages/ForgotPassword';
+import Dashboard from './pages/Dashboard';
+import ResetPassword from './pages/ResetPassword';
 
+
+function App() {
 
 
   return (
     <div className="App">
-      <h1>Productivity Tracker</h1>    
+      
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to='/signup'/>} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<Form />} />
+        
+        <Route path="/login" element={<LoginPage/>} />
+        <Route path="/signupForm" element={<SignupForm/>} />
+        <Route path="/ForgotPassword" element={<ForgotPassword/>} />
+        <Route path="/ResetPassword" element={<ResetPassword/>} />
+        <Route path="/Dashboard" element={<Dashboard/>} />
+        <Route path="/*" element={<Navigate to='/signupForm'/>} />
+
       </Routes>
       </BrowserRouter>
     </div>
