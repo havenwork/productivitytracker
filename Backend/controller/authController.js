@@ -7,16 +7,18 @@ const jwt = require("jsonwebtoken");
 // signup controller
 const signup = async (req, res) => {
   try {
-    const newUser = userModel(req.body);
+    const body = req.body;
+    body.image = req.image
+    const newUser = userModel(body);
     const result = await newUser.save();
 
     res.status(200).json({
-       success: true,
-      message: "Sign Up Successfull",
+      success: true,
+      message: "Sign Up Successful",
     });
   } catch (error) {
     res.status(400).json({
-       success: false,
+      success: false,
       message: error.message,
     });
   }
@@ -37,30 +39,30 @@ const login = async (req, res) => {
     if (!getuserData && !getuserData.username) {
       res.status(404).send({ msg: "No Account Found Associated with this username" });
     }
-      const result = await bcrypt.compare(password, getuserData.password);
-      if (!result) {res.status(404).send("user password wrong")}
-        // Generate a JWT token
-        const token = jwt.sign(
-          { username: getuserData.username, /* any other data you want to include */ },
-          'your_secret_key', // Replace 'your_secret_key' with a secret key for signing the token
-          { expiresIn: '24h' } // Token expiration time
-        );
-         
-        const cookieOption = {
-          maxAge: 24 * 60 * 60 * 1000, // 24hr
-          httpOnly: true,
-          path: "/",
-        };
+    const result = await bcrypt.compare(password, getuserData.password);
+    if (!result) { res.status(404).send("user password wrong") }
+    // Generate a JWT token
+    const token = jwt.sign(
+      { username: getuserData.username, /* any other data you want to include */ },
+      'your_secret_key', // Replace 'your_secret_key' with a secret key for signing the token
+      { expiresIn: '24h' } // Token expiration time
+    );
 
-        res.cookie("token", token, cookieOption);
-        res.status(200).json({
-          success: true,
-          data: getuserData,
-        });
-       
-      }
-     
-   catch (e) {
+    const cookieOption = {
+      maxAge: 24 * 60 * 60 * 1000, // 24hr
+      httpOnly: true,
+      path: "/",
+    };
+
+    res.cookie("token", token, cookieOption);
+    res.status(200).json({
+      success: true,
+      data: getuserData,
+    });
+
+  }
+
+  catch (e) {
     res.status(400).send({
       message: e.message,
     });
@@ -100,10 +102,10 @@ const getUser = async (req, res) => {
 // exports.resetPassword=(req,res,next)={
 
 // }
-  
+
 module.exports = {
   signup,
   login,
   getUser,
-  
+
 };

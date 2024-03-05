@@ -18,17 +18,20 @@ const userSchema = new mongoose.Schema(
       unique: [true, "user already exists"],
       lowercase: true,
     },
+    image: {
+      type: String,
+    },
     password: {
       type: String,
       required: [true, 'Please enter a password.'],
       minlength: 8
     },
     confirmPassword: {
-        type: String,
-        required: [true, 'Please confirm your password.']
+      type: String,
+      required: [true, 'Please confirm your password.']
     },
-    passwordResetToken:String,
-    passwordResetTokenExpires:Date,
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
     bio: {
       type: String,
       required: true,
@@ -58,4 +61,3 @@ userSchema.pre("save", async function (next) {
 
 const userModel = mongoose.model("user", userSchema);
 module.exports = userModel;
-  
