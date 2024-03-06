@@ -18,11 +18,11 @@ function App() {
       <Routes>
         
         <Route path="/login" element={<LoginPage/>} />
-        <Route path="/signupForm" element={<SignupForm/>} />
+        <Route path="/signup" element={<SignupForm/>} />
         <Route path="/ForgotPassword" element={<ForgotPassword/>} />
         <Route path="/ResetPassword" element={<ResetPassword/>} />
         <Route path="/Dashboard" element={<Dashboard/>} />
-        <Route path="/*" element={<Navigate to='/signupForm'/>} />
+        <Route path="/*" element={<Navigate to='/signup'/>} />
 
       </Routes>
       </BrowserRouter>
