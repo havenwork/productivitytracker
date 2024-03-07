@@ -21,7 +21,7 @@ describe('SignUpForm component', () => {
     const submitButton = screen.getByText(/submit/i);
 
     // simulating user input
-    fireEvent.change(nameInput, { target: { value: mockUser.name } });
+    fireEvent.change(nameInput, { target: { value: mockUser.fullname } });
     fireEvent.change(emailInput, { target: { value: mockUser.email } });
     fireEvent.change(passwordInput, { target: { value: mockUser.password } });
     fireEvent.click(submitButton);
@@ -30,3 +30,4 @@ describe('SignUpForm component', () => {
     expect(onSubmitMock).toHaveBeenCalledWith(mockUser);
   });
 });
+
