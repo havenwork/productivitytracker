@@ -13,7 +13,8 @@ databaseConnect();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    // origin: process.env.CLIENT_URL,
+    origin: "*", //giving access to all domain users
     credentials: true,
   })
 );
@@ -28,6 +29,7 @@ app.use("/home", (req, res) => {
     data: "user management like application",
   });
 });
+
 
 
 const PORT = process.env.PORT || 6766;

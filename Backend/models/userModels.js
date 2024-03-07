@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const JWT = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+// const JWT = require("jsonwebtoken");
+// const bcrypt = require("bcrypt");
 
 
 const userSchema = new mongoose.Schema(
@@ -26,15 +26,12 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Please enter a password.'],
       minlength: 8
     },
-    confirmPassword: {
-      type: String,
-      required: [true, 'Please confirm your password.']
-    },
+
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
     bio: {
       type: String,
-      required: true,
+      required: false,
       maxLength: [125, "Bio should be within 125 characters"],
     },
     username: {
@@ -48,15 +45,6 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-// hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-  this.password = await bcrypt.hash(this.password, 10);
-  return next();
-});
 
 
 const userModel = mongoose.model("user", userSchema);

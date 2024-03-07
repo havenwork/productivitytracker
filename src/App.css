@@ -11,20 +11,22 @@
   justify-content: center;
   align-items: center;
 }
+
 .app-wrapper {
   background-color: #fff;
-  min-width:350px;
-  min-height:650px;
+  min-width: 350px;
+  min-height: 650px;
   padding: 30px;
   box-sizing: border-box;
   border-radius: 5px;
 }
 
 .title {
-  color:#f80759;
+  color: #f80759;
   text-align: center;
   margin: 80px 0px 40px 0px;
 }
+
 .name,
 .email,
 .password {
@@ -36,8 +38,9 @@
 .password {
   margin-bottom: 40px;
 }
-.input{
-  height:32px;
+
+.input {
+  height: 32px;
   font-size: 20px;
   outline: none;
   width: 100%;
@@ -45,7 +48,7 @@
   border-left-style: none;
   border-right-style: none;
   border-bottom-style: 2px solid black;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .error {
@@ -55,13 +58,13 @@
 .submit {
   display: flex;
   text-transform: uppercase;
-  font-size:20px;
+  font-size: 20px;
   border-radius: 25px;
   color: white;
   padding: 10px 60px;
   background: linear-gradient(to right, #ab1dcf, #f80759);
-  box-shadow: rgba(0,0,0,0.3) 0px 19px 38px,
-  rgba(0,0,0,0.22) 0px 15px 12px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
   margin: auto;
   outline: none;
   border: none;
@@ -69,14 +72,84 @@
   transition: all 0.1s;
 
 }
+
 button:active {
   transform: translate(2px);
 }
 
 .form-sucsess {
-  display:flex;
+  display: flex;
   justify-content: center;
   margin-top: 250px;
   min-width: 370px;
   color: #f80759;
+}
+
+.reactUser__icon {
+  font-size: 20px;
+}
+
+/* Simple css loader */
+.loader {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  right: 0;
+  color: #FFF;
+  box-sizing: border-box;
+  animation: animloader 2s linear infinite;
+}
+
+@keyframes animloader {
+  0% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+  }
+  25% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 2px;
+  }
+  50% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 2px,  -38px 0 0 -2px;
+  }
+  75% {
+    box-shadow: 14px 0 0 2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+  }
+  100% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+  }
+}
+@media screen and (max-width: 510px) {
+
+  .Authform__leftContainer {
+    padding: 1em 0em;
+  }
+
+  .leftContainer__formWrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+  }
+
+  .AuthForm {
+    width: 95%;
+    margin: 1em auto 0em auto;
+  }
+
+  .FormWrapper__primaryHeading {
+    width: 100%;
+    padding-left: 0.5em;
+  }
+
+  .FormWrapper__secondaryHeading {
+    display: block;
+    width: 100%;
+    padding-left: 1em;
+  }
 }
