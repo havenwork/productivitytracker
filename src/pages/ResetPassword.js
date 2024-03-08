@@ -1,62 +1,7 @@
-
-import React, { useState } from "react";
-
 import hero_png from '../icons/hero.png'
-import email_svg from '../icons/email.svg'
 import logo_svg from '../icons/logo.svg'
 import lock_svg from '../icons/lock.svg'
-
-
 const ResetPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState([]);
-  const [loginSuccess, setLoginSuccess] = useState(false);
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  const validateForm = () => {
-    const newErrors = [];
-
-    if (username.trim() === "") {
-      newErrors.push("Enter your username");
-    } else {
-      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-      const phonePattern = /^\d{10}$/;
-
-      if (!emailPattern.test(username) && !phonePattern.test(username)) {
-        newErrors.push("Enter a valid email/phone number");
-      }
-    }
-
-    if (password.trim() === "") {
-      newErrors.push("Enter your password");
-    }
-
-    setErrors(newErrors);
-
-    return newErrors.length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (validateForm()) {
-      setLoginSuccess(true);
-    }
-  };
-
   return (
   <div className=" font-sans bg-gray-100">
   <div className="flex justify-between min-h-screen">
