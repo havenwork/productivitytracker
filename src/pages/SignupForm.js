@@ -83,9 +83,8 @@ const SignupForm = () => {
                     Full name
                   </label>
                   <div
-                    className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${
-                      errors?.fullNameError && `border-1 border-red-600`
-                    }`}
+                    className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${errors?.fullNameError && `border-1 border-red-600`
+                      }`}
                   >
                     <div className="w-14 h-full  flex justify-center">
                       {/* <img src={email_svg} alt="SVGICON" className="w-6" /> */}
@@ -113,9 +112,8 @@ const SignupForm = () => {
                     Email address
                   </label>
                   <div
-                    className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${
-                      errors?.emailError && `border-1 border-red-600`
-                    }`}
+                    className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${errors?.emailError && `border-1 border-red-600`
+                      }`}
                   >
                     <div className="w-14 h-full  flex justify-center">
                       <img src={email_svg} alt="SVGICON" className="w-5" />
