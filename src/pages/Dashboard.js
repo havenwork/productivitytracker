@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import validation from "../helpers/validation";
 import spaceImage from "../img/Space-X-Dragon.png"
 import background_png from '../img/background.png';
 import Connections from '../components/Connections';

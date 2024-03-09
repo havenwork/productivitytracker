@@ -7,7 +7,6 @@ const loginSchema = yup.object().shape({
 
 exports.loginValidator = (req, res, next) => {
   const { username, password } = req.body;
-console.log(req.body)
   loginSchema.validate({ username, password })
     .then(() => {
       next();

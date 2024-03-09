@@ -10,6 +10,7 @@ import {ReactComponent as AvionicsIcon} from "../icons/avionics.svg";
 import {ReactComponent as GNCIcon} from "../icons/gnc.svg";
 import {ReactComponent as ThermalIcon} from "../icons/thermal.svg";
 import {ReactComponent as OverviewIcon} from '../icons/overview.svg';
+import { Link } from 'react-router-dom';
 
 
 const bars = [
@@ -41,12 +42,12 @@ const MyComponent = () => {
           <path d="M64.3029 8.65669C68.8626 3.17225 75.6254 0 82.7578 0H83V86H0L64.3029 8.65669Z" />
         </svg>
         {bars.map((bar, index) => (
-          <a key={index} href="#" className="flex flex-col items-center px-4 group">
+          <Link key={index} className="flex flex-col items-center px-4 group">
             {bar.icon}
             <span className="text-grey-600 text-xxxs mt-1.5 group-hover:text-red">
               {bar.title}
             </span>
-          </a>
+          </Link>
         ))}
         <svg
           className="fill-current text-blue-900 absolute top-0 bottom-0 right-0 translate-x-3/4"
