@@ -7,12 +7,20 @@ import lock_svg from "../icons/lock.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
-import validateUserDetails from "../helpers/formValidation";
 import Loader from "../components/Loader";
+import { isUserName } from "../helpers/validateUserName";
+import { isFullName } from "../helpers/validateFullName";
+import { isEmail } from "../helpers/validateEmail";
+import { isPassword } from "../helpers/validatePassword";
 function Signup() {
+  let errMessage = {
+    msg: "",
+  };
   const navigateTO = useNavigate();
   const userNameRef = useRef();
+  const nameRef = useRef();
   const emailRef = useRef();
+  const passwordRef = useRef();
   const [ShowPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -43,10 +51,32 @@ function Signup() {
 
   const handleSignUpClick = (e) => {
     e.preventDefault();
-    const validationResponse = validateUserDetails(values);
-    setErrors(validationResponse);
 
-    if (!validationResponse) {
+    if (!isUserName(values.username, errMessage)) {
+      setErrors({
+        userNameError: true,
+        errMsg: errMessage.msg,
+      });
+      userNameRef.current.focus();
+    } else if (!isFullName(values.name, errMessage)) {
+      setErrors({
+        fullNameError: true,
+        errMsg: errMessage.msg,
+      });
+      nameRef.current.focus();
+    } else if (!isEmail(values.email, errMessage)) {
+      setErrors({
+        emailError: true,
+        errMsg: errMessage.msg,
+      });
+      emailRef.current.focus();
+    } else if (!isPassword(values.password, errMessage)) {
+      setErrors({
+        passwordError: true,
+        errMsg: errMessage.msg,
+      });
+      passwordRef.current.focus();
+    } else {
       setLoading(true);
       axios
         .post("https://productivitytrackerbe.onrender.com//signup", values)
@@ -75,10 +105,11 @@ function Signup() {
   };
 
   const handleShowPasswordClick = (e) => {
+    e.preventDefault();
     setShowPassword(!ShowPassword);
   };
   return (
-    <div className="w-full h-full p-1 py-5 flex align-start flex-col justify-center px-2 xsm:w-400 mx-auto md:w-550 lg:w-550 xl:w-600 lg:px-14">
+    <div className="w-full p-1 py-5 flex align-start flex-col justify-center px-2 xsm:w-400 mx-auto md:w-550 lg:w-550 xl:w-600 lg:px-14">
       {/* Primary heading */}
       <h1 className="text-2xl font-bold text-gray-800 mb-2 w-full xsm: pl-1 lg:text-3xl">
         Get Started!
@@ -145,6 +176,7 @@ function Signup() {
               value={values.name}
               maxLength={"20"}
               autoComplete="off"
+              ref={nameRef}
             />
           </div>
           {errors?.fullNameError && (
@@ -204,6 +236,7 @@ function Signup() {
               className="px-4 py-3 w-full focus:outline-none font-light border-0 focus:ring-0 border-red-600 h-full"
               onChange={handleInputOnChange}
               value={values.password}
+              ref={passwordRef}
             />
             {ShowPassword ? (
               <BsFillEyeSlashFill
@@ -258,7 +291,6 @@ function Signup() {
           </div>
         </div>
       </form>
-
     </div>
   );
 }

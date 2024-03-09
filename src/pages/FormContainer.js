@@ -5,7 +5,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 function FormContainer() {
   const { pathname } = useLocation();
   const navigateTO = useNavigate();
-  console.log(pathname);
   useEffect(() => {
     if (pathname === "/") {
       navigateTO("/signup");

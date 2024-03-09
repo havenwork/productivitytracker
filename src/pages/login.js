@@ -6,9 +6,12 @@ import email_svg from "../icons/email.svg";
 import lock_svg from "../icons/lock.svg";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
-import validateLoginDetails from "../helpers/signInValidation";
 import { message } from "antd";
+import { isPassword } from "../helpers/validatePassword";
 function LoginPage() {
+  let errMessage = {
+    msg: "",
+  };
   const passwordRef = useRef();
   const userNameRef = useRef();
   const [ShowPassword, setShowPassword] = useState(false);
@@ -35,10 +38,26 @@ function LoginPage() {
 
   const handleSigninClick = (e) => {
     e.preventDefault();
-    const validationResponse = validateLoginDetails(userDetails);
-    setErrors(validationResponse);
 
-    if (!validationResponse) {
+    if (userDetails.username === "") {
+      setErrors({
+        userNameError: true,
+        errMsg: "Required",
+      });
+      userNameRef.current.focus();
+    } else if (userDetails.username.length < 6) {
+      setErrors({
+        userNameError: true,
+        errMsg: "Invalid username",
+      });
+      userNameRef.current.focus();
+    } else if (!isPassword(userDetails.password, errMessage)) {
+      setErrors({
+        passwordError: true,
+        errMsg: errMessage.msg,
+      });
+      passwordRef.current.focus();
+    } else {
       setLoading(true);
       try {
         axios
@@ -61,7 +80,11 @@ function LoginPage() {
               passwordRef.current.focus();
             }
           });
-      } catch (e) {}
+      } catch (e) {
+        message.error("Something went wrong! Try Again");
+        handleClearFields();
+        userNameRef.current.focus();
+      }
     }
   };
 
@@ -69,7 +92,7 @@ function LoginPage() {
     setShowPassword(!ShowPassword);
   };
   return (
-    <div className="w-full h-full p-1 pt-10 flex align-start flex-col justify-center px-4 xsm:w-400 mx-auto xsm:p-0 xsm:pt-10 md:w-550 xl:w-600 lg:px-14" >
+    <div className="w-full  p-1 pt-10 flex align-start flex-col justify-center px-4 xsm:w-400 mx-auto xsm:p-0 xsm:pt-10 md:w-550 xl:w-600 lg:px-14">
       {/* Primary heading */}
       <h1 className="text-3xl font-bold text-gray-800 mb-2 w-full xsm: pl-1 lg:text-4xl">
         Hi, Welcome back!
