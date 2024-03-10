@@ -36,13 +36,11 @@ const SignupForm = () => {
   //     submitForm(true);
   //   }
   // }, [ dataIsCorrect, submitForm]);
+
   return (
     <div className=" font-sans bg-gray-100">
       <div className="flex justify-between min-h-screen">
-        <div
-          className="hidden relative w-1/2  bg-center bg-cover lg:block"
-          style={{ backgroundImage: `url(${hero_png})` }}
-        >
+        <div className="hidden relative w-1/2  bg-center bg-cover lg:block" style={{ backgroundImage: `url(${hero_png})` }}>
           <div className="flex absolute bottom-20 justify-center w-full">
             <div className="max-w-md text-center">
               <span className="text-3xl font-bold leading-loose text-gray-900">
@@ -59,16 +57,9 @@ const SignupForm = () => {
           <div className="flex flex-col px-8 pt-3 lg:px-14 xl:px-24 ">
             <div className="pt-5 pb-6 ">
               <div className="flex self-end p-0 ">
-                <img
-                  src={logo_svg}
-                  alt="Logo"
-                  className="w-32 absolute top-5 right-5 "
-                />
+                <img src={logo_svg} alt="Logo" className="w-32 absolute top-5 right-5 " />
               </div>
-
-              <h1 className="text-3xl font-bold tracking-wide leading-loose">
-                Get Started!
-              </h1>
+              <h1 className="text-3xl font-bold tracking-wide leading-loose">Get Started!</h1>
               <span className="font-light text-gray-800 mb-8">
                 Activate your access: Sign up for a seamless experience.
               </span>
@@ -76,29 +67,10 @@ const SignupForm = () => {
 
               <form className="pt-2 mt-2 w-full">
                 <div className="mb-4">
-                  <label
-                    htmlFor="fullname"
-                    className="font-light text-gray-800"
-                  >
-                    Full name
-                  </label>
-                  <div
-                    className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${errors?.fullNameError && `border-1 border-red-600`
-                      }`}
-                  >
-                    <div className="w-14 h-full  flex justify-center">
-                      {/* <img src={email_svg} alt="SVGICON" className="w-6" /> */}
-                    </div>
-
-                    <input
-                      type="text"
-                      name="fullname"
-                      id="fullname"
-                      placeholder="Enter your name"
-                      className="px-4 py-2 w-full focus:outline-none font-light border-0 focus:ring-0 border-red-600 h-full"
-                      onChange={handleInputOnChange}
-                      value={values.name}
-                    />
+                  <label htmlFor="fullname" className="font-light text-gray-800">Full name</label>
+                  <div className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${errors?.fullNameError && `border-1 border-red-600`}`}>
+                    <div className=" w-14 h-full  flex justify-center">{/* <img src={email_svg} alt="SVGICON" className="w-6" /> */}</div>
+                    <input type="text" name="fullname" id="fullname" placeholder="Enter your name" className="px-4 py-2 w-full focus:outline-none font-light border-0 focus:ring-0 border-red-600 h-full" onChange={handleInputOnChange} value={values.name} />
                   </div>
                   {errors.fullNameError && (
                     <span className="block pl-2 text-red-600 font-semibold italic">
