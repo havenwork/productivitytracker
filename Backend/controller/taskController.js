@@ -1,16 +1,15 @@
 const taskModel = require("../models/taskModels");
-
 const createTask = async (req, res) => {
     try {
         const body = req.body;
         body.startDate = new Date(body.startDate);
         body.endDate = new Date(body.endDate);
-
         const task = taskModel(req.body);
         await task.save();
         res.status(200).json({
             msg: "success",
             data: "Task Created Successfully",
+            taskID: task._id
         });
     } catch (error) {
         if (error.errors.description !== undefined) {
@@ -22,7 +21,7 @@ const createTask = async (req, res) => {
 
 const tasks = async (req, res) => {
     try {
-        const task = await taskModel.find({ goal: req.body.goalId });
+        const task = await taskModel.find({ task: req.body.taskId });
         if (task.length === 0) {
             res.status(400).json({
                 msg: "error",
