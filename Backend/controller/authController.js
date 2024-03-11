@@ -1,52 +1,76 @@
-
 const userModel = require("../models/userModels");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-
+const saltround = 10;
 // signup controller
 const signup = async (req, res) => {
   try {
-    const body = req.body;
-    body.image = req.image
-    const newUser = userModel(body);
-    const result = await newUser.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Sign Up Successful",
+    const tempUser = req.body;
+    const isUserExists = await userModel.findOne({ email: tempUser.email });
+    const isUniqueUserName = await userModel.findOne({
+      username: tempUser.username,
     });
+    if (isUniqueUserName) {
+      return res.status(200).json({
+        success: false,
+        errMsg: "User name not available",
+      });
+    }
+    if (isUserExists) {
+      return res.status(200).json({
+        success: false,
+        errMsg: "Email already registered",
+      });
+    }
+
+    // hash user password
+    tempUser.password = bcrypt.hashSync(tempUser.password, saltround);
+
+    const mongooseResponse = await userModel.create(tempUser);
+    if (mongooseResponse) {
+      return res.status(200).json({
+        success: true,
+        errMsg: "User created successfully",
+      });
+    }
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      errMsg: error.message,
     });
   }
 };
 
 // login controller
 
-
-
-
 const login = async (req, res) => {
-  const { username, password } = req.body;
-
   try {
-    const getuserData = await userModel
-      .findOne({ username })
-      .select("+password");
-    if (!getuserData && !getuserData.username) {
-      res.status(404).send({ msg: "No Account Found Associated with this username" });
+    const { username, password } = req.body;
+    const isUserRegistered = await userModel.findOne({
+      $or: [{ email: { $eq: username } }, { username: username }],
+    });
+    console.log(!isUserRegistered)
+    if (!isUserRegistered) {
+      return res.json({
+        success: false,
+        errMsg: "No Account Found Associated with this username",
+      });
     }
-    const result = await bcrypt.compare(password, getuserData.password);
-    if (!result) { res.status(404).send("user password wrong") }
-    // Generate a JWT token
-    const token = jwt.sign(
-      { username: getuserData.username, /* any other data you want to include */ },
-      'your_secret_key', // Replace 'your_secret_key' with a secret key for signing the token
-      { expiresIn: '24h' } // Token expiration time
+
+    // matching password
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      isUserRegistered.password
     );
+    if (!isPasswordMatch) {
+      return res.json({
+        success: false,
+        errMsg: "Wrong password",
+      });
+    }
+
+    // Generating JWT token
+    const token = jwt.sign({}, "productivitytracker", { expiresIn: "24h" });
 
     const cookieOption = {
       maxAge: 24 * 60 * 60 * 1000, // 24hr
@@ -55,23 +79,21 @@ const login = async (req, res) => {
     };
 
     res.cookie("token", token, cookieOption);
-    res.status(200).json({
+    isUserRegistered.password = undefined; // assign the user password to undefined for security reasons
+    return res.status(200).json({
       success: true,
-      data: getuserData,
-    });
-
-  }
-
-  catch (e) {
-    res.status(400).send({
-      message: e.message,
+        errMsg: "Logged in successfully",
+        currentUser : isUserRegistered
+    })
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      errMsg: error.message,
     });
   }
 };
 
-
 // user details
-
 const getUser = async (req, res) => {
   const username = req.user.username;
   console.log("Username:", username);
@@ -93,19 +115,8 @@ const getUser = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-// exports.resetPassword=(req,res,next)={
-
-// }
-
 module.exports = {
   signup,
   login,
   getUser,
-
 };
