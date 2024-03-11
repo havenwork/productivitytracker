@@ -12,9 +12,10 @@ const createGoal = async (req, res) => {
         res.status(200).json({
             msg: "success",
             data: "Goal Created Successfully",
+            goalID: goal._id
         });
     } catch (error) {
-        res.status(400).json({ msg: false });
+        res.status(400).json({ msg: false,data:error.message });
     }
 
 };
@@ -46,7 +47,7 @@ const updateGoal = async (req, res) => {
             });
         }
     } catch (error) {
-        res.status(400).json({ msg: false });
+        res.status(400).json({ msg: false, data:error.message });
     }
 }
 
