@@ -2,8 +2,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SignupForm from '../pages/SignupForm';
-import login from '../pages/login'
+import LoginPage from '../pages/login';
 import axios from 'axios'
+import ForgotPassword from '../pages/ForgotPassword'
 
 // mock data --
 const mockUser = {
@@ -72,7 +73,7 @@ describe('SignUpForm component', () => {
 describe('LOGIN Component', () => {
   //=> Testing login component with proper validation
   test('rendering initial form', () => {
-    render(<login />);
+    render(<LoginPage />);
 
     const heading = screen.getByText(/Hi, Welcome back!/i);
     expect(heading).toBeInTheDocument();
@@ -99,7 +100,7 @@ describe('LOGIN Component', () => {
 
   //=> Handli9ng input changes
   test('handling username input change', () => {
-    render(<login />);
+    render(<LoginPage />);
     // username input change
     const usernameInput = screen.getByRole('textbox', { name: /Email or Username/i });
     fireEvent.change(usernameInput, { target: { value: 'testuser' } });
@@ -114,10 +115,10 @@ describe('LOGIN Component', () => {
 
   // //=> Handling form submission
   test('handling form submission with successful login', async () => {
-    const mockResponse = { errMsg: 'Logged in successfully' };
+    const mockResponse = { msg: 'Logged in successfully' };
     jest.spyOn(axios, 'post').mockResolvedValue(mockResponse);
   
-    render(<login />);
+    render(<LoginPage />);
   
     const usernameInput = screen.getByRole('textbox', { name: /Email or Username/i });
     fireEvent.change(usernameInput, { target: { value: 'testuser' } });
@@ -135,7 +136,52 @@ describe('LOGIN Component', () => {
     });
     expect(axios.post).toHaveReturnedValue(mockResponse);
   });
-  
+})
 
 
+/// Testing FORGOT PASSWORD Component
+describe('Forgot Passowrd', () => {
+  //=> initial rendering
+  test('rendering Forgot Password form with expected elements', () => {
+    render(<ForgotPassword />);
+
+    const heading = screen.getByText(/Hi, Welcome back!/i);
+    const emailLabel = screen.getByLabelText(/Email address/i);
+    const emailInput = screen.getByRole('textbox', { name: /email/i });
+    const submitButton = screen.getByRole('button', { name: /Reset Password/i });
+    const signupLink = screen.getByText(/Create an Account/i);
+
+    expect(heading).toBeInTheDocument();
+    expect(emailLabel).toBeInTheDocument();
+    expect(emailInput).toBeInTheDocument();
+    expect(submitButton).toBeInTheDocument();
+    expect(signupLink).toBeInTheDocument();
+  });
+
+  //=> handling form submission
+  test('prevents default form submission', () => {
+    const handleResetPasswordMock = jest.fn();
+    render(<ForgotPassword handleResetPasswordClick={handleResetPasswordMock} />);
+
+    const submitButton = screen.getByRole('button', { name: /Reset Password/i });
+    fireEvent.click(submitButton);
+
+    expect(handleResetPasswordMock).toHaveBeenCalledTimes(1);
+    expect(handleResetPasswordMock).toHaveBeenCalledWith(expect.any(MouseEvent));
+  });
+
+
+  //rendering error msg for wrong email input
+  test('shows error message for invalid email address', () => {
+    render(<ForgotPassword />);
+
+    const emailInput = screen.getByRole('textbox', { name: /email/i });
+    const submitButton = screen.getByRole('button', { name: /Reset Password/i });
+
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+    fireEvent.click(submitButton);
+
+    const errorMessage = screen.getByText(/Please enter a valid email address/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
 })
