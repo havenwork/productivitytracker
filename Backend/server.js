@@ -9,7 +9,8 @@ const { taskRouter } = require("./routers/taskRouters");
 require("dotenv").config({ path: "./config.env" });
 
 const app = express();
-databaseConnect();
+ databaseConnect();
+
 
 app.use(
   cors({
@@ -28,10 +29,10 @@ app.use("/home", (req, res) => {
     data: "user management like application",
   });
 });
-
-
 const PORT = process.env.PORT || 6766;
 
-app.listen(PORT, () => {
+ app.listen(PORT, () => {
   console.log(`Server is up and running at http://localhost:${PORT}`);
 });
+
+module.exports = app;
