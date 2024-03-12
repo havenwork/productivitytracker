@@ -19,17 +19,20 @@ function FormContainer() {
       >
         <div className="flex absolute bottom-10 justify-center flex-col w-full align-middle gap-2">
           <span className="text-3xl font-bold leading-loose text-gray-900 w-full text-center">
-            Productivity Tracker
+            {pathname === "/ResetPassword"
+              ? " Reset your password!"
+              : "Productivity Tracker"}
           </span>
           <p className="font-light leading-7 text-gray-500 w-full text-center lg:text-2xl mx-auto px-16">
-            Maximize Your Day: Empower productivity with our intuitive tracker,
-            turning tasks into accomplishments.
+            {pathname === "/ResetPassword"
+              ? "Optimize your online security by reconfiguring your password settings regularly."
+              : "  Maximize Your Day: Empower productivity with our intuitive tracker, turning tasks into accomplishments."}
           </p>
         </div>
       </div>
       {/* FormContainer_right side */}
       <div
-        className={`min-h-screen w-full relative lg:w-1/2 lg:px-5 py-10 flex`}
+        className={`min-h-screen w-full relative lg:w-1/2 lg:px-5 py-10 flex items-center`}
       >
         {/* LOGO */}
         <img

@@ -7,13 +7,11 @@ import lock_svg from "../icons/lock.svg";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
 import { message } from "antd";
-import { isPassword } from "../helpers/validatePassword";
+import * as Yup from "yup";
+
 function LoginPage() {
-  let errMessage = {
-    msg: "",
-  };
-  const passwordRef = useRef();
   const userNameRef = useRef();
+  const passwordRef = useRef();
   const [ShowPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -36,55 +34,54 @@ function LoginPage() {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
 
-  const handleSigninClick = (e) => {
-    e.preventDefault();
+  const signInSchema = Yup.object({
+    username: Yup.string()
+      .min(6, "Username should be at least 6 characters long")
+      .required("Username required"),
+    password: Yup.string()
+      .min(5, "Password should be at least 5 characters long")
+      .required("Password required"),
+  });
 
-    if (userDetails.username === "") {
-      setErrors({
-        userNameError: true,
-        errMsg: "Required",
+  const handleSigninClick = async (e) => {
+    e.preventDefault();
+    try {
+      await signInSchema.validate(userDetails, {
+        abortEarly: false,
       });
-      userNameRef.current.focus();
-    } else if (userDetails.username.length < 6) {
-      setErrors({
-        userNameError: true,
-        errMsg: "Invalid username",
-      });
-      userNameRef.current.focus();
-    } else if (!isPassword(userDetails.password, errMessage)) {
-      setErrors({
-        passwordError: true,
-        errMsg: errMessage.msg,
-      });
-      passwordRef.current.focus();
-    } else {
       setLoading(true);
-      try {
-        axios
-          .post("https://productivitytrackerbe.onrender.com/login", userDetails)
-          .then((response) => {
-            setLoading(false);
-            if (response.data.errMsg === "Logged in successfully") {
-              message.success(`${response.data.errMsg}`);
-              console.log(response.data);
-              handleClearFields();
-            } else if (
-              response.data.errMsg ===
-              "No Account Found Associated with this username"
-            ) {
-              message.info(`${response.data.errMsg}`);
-              userNameRef.current.focus();
-              handleClearFields();
-            } else if (response.data.errMsg === "Wrong password") {
-              message.error(`${response.data.errMsg}`);
-              passwordRef.current.focus();
-            }
-          });
-      } catch (e) {
-        message.error("Something went wrong! Try Again");
-        handleClearFields();
-        userNameRef.current.focus();
-      }
+      axios
+        .post("https://productivitytrackerbe.onrender.com/login", userDetails)
+        .then((response) => {
+          setLoading(false);
+          if (response.data.errMsg === "Logged in successfully") {
+            message.success(`${response.data.errMsg}`);
+            console.log(response.data);
+            handleClearFields();
+          } else if (
+            response.data.errMsg ===
+            "No Account Found Associated with this username"
+          ) {
+            message.info(`${response.data.errMsg}`);
+            userNameRef.current.focus();
+            handleClearFields();
+          } else if (response.data.errMsg === "Wrong password") {
+            message.error(`${response.data.errMsg}`);
+            passwordRef.current.focus();
+          }
+        })
+        .catch((err) => {
+          message.info(`Something went wrong! Try Again ${err.message}`);
+          userNameRef.current.focus();
+          handleClearFields();
+        });
+    } catch (err) {
+      let newError = {};
+      err.inner.forEach((item) => {
+        newError[`${item.path}Error`] = true;
+        newError[`${item.path}Msg`] = item.message;
+      });
+      setErrors(newError);
     }
   };
 
@@ -102,14 +99,14 @@ function LoginPage() {
         Ready, set, login! Your personalized experience awaits.
       </h3>
       {/* Login form */}
-      <form className="w-full min-h-96 mt-5 ">
+      <form className="w-full min-h-96 mt-5" onSubmit={handleSigninClick}>
         <div className="mb-4">
           <label htmlFor="username" className="font-medium text-gray-800">
             Email or Username
           </label>
           <div
             className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${
-              errors?.userNameError && `border-1 border-red-600`
+              errors?.usernameError && `border-1 border-red-600`
             }`}
           >
             <div className="w-14 h-full  flex justify-center">
@@ -127,9 +124,9 @@ function LoginPage() {
               ref={userNameRef}
             />
           </div>
-          {errors.userNameError && (
+          {errors.usernameError && (
             <span className="block pl-2 text-red-600 font-semibold italic text-sm">
-              {errors.errMsg}
+              {errors.usernameMsg}
             </span>
           )}
         </div>
@@ -138,7 +135,11 @@ function LoginPage() {
           <label htmlFor="password" className="font-medium text-gray-800">
             Password
           </label>
-          <div className="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
+          <div
+            className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${
+              errors?.passwordError && `border-1 border-red-600`
+            }`}
+          >
             <div className="w-14 h-full  flex justify-center">
               <img src={lock_svg} alt="SVGICON" className="w-5" />
             </div>
@@ -168,7 +169,7 @@ function LoginPage() {
           </div>
           {errors.passwordError && (
             <span className="block pl-2 text-red-600 font-semibold italic text-sm">
-              {errors.errMsg}
+              {errors.passwordMsg}
             </span>
           )}
         </div>
@@ -199,7 +200,6 @@ function LoginPage() {
 
         <div className="pt-8">
           <button
-            onClick={handleSigninClick}
             type="submit"
             className="relative h-14 w-full text bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 focus:outline-none"
           >
