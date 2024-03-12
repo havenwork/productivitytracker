@@ -8,14 +8,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
 import Loader from "../components/Loader";
-import { isUserName } from "../helpers/validateUserName";
-import { isFullName } from "../helpers/validateFullName";
-import { isEmail } from "../helpers/validateEmail";
-import { isPassword } from "../helpers/validatePassword";
+
+import * as Yup from "yup";
+
 function Signup() {
-  let errMessage = {
-    msg: "",
-  };
   const navigateTO = useNavigate();
   const userNameRef = useRef();
   const nameRef = useRef();
@@ -49,37 +45,30 @@ function Signup() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const handleSignUpClick = (e) => {
-    e.preventDefault();
+  const signUpSchema = Yup.object({
+    username: Yup.string()
+      .min(6, "Username should be at least 6 characters long")
+      .required("Username required"),
+    name: Yup.string()
+      .min(3, "Name should be at least 3 characters long")
+      .max(20, "Name should be at least 20 characters long")
+      .required("Full name required"),
+    email: Yup.string().email("Invalid email").required("Email required"),
+    password: Yup.string()
+      .min(5, "Password should be at least 5 characters long")
+      .required("Password required"),
+  });
 
-    if (!isUserName(values.username, errMessage)) {
-      setErrors({
-        userNameError: true,
-        errMsg: errMessage.msg,
+  const handleSignUpClick = async (e) => {
+    e.preventDefault();
+    try {
+      await signUpSchema.validate(values, {
+        abortEarly: false,
       });
-      userNameRef.current.focus();
-    } else if (!isFullName(values.name, errMessage)) {
-      setErrors({
-        fullNameError: true,
-        errMsg: errMessage.msg,
-      });
-      nameRef.current.focus();
-    } else if (!isEmail(values.email, errMessage)) {
-      setErrors({
-        emailError: true,
-        errMsg: errMessage.msg,
-      });
-      emailRef.current.focus();
-    } else if (!isPassword(values.password, errMessage)) {
-      setErrors({
-        passwordError: true,
-        errMsg: errMessage.msg,
-      });
-      passwordRef.current.focus();
-    } else {
+
       setLoading(true);
       axios
-        .post("https://productivitytrackerbe.onrender.com//signup", values)
+        .post("https://productivitytrackerbe.onrender.com/signup", values)
         .then((response) => {
           setLoading(false);
           if (response.data.errMsg === "User created successfully") {
@@ -99,15 +88,25 @@ function Signup() {
           }
         })
         .catch((error) => {
+          setLoading(true);
           message.error(error.message);
         });
+    } catch (err) {
+      let newError = {};
+      err.inner.forEach((item) => {
+        newError[`${item.path}Error`] = true;
+        newError[`${item.path}Msg`] = item.message;
+      });
+      setErrors(newError);
     }
   };
 
+  
   const handleShowPasswordClick = (e) => {
     e.preventDefault();
     setShowPassword(!ShowPassword);
   };
+
   return (
     <div className="w-full p-1 py-5 flex align-start flex-col justify-center px-2 xsm:w-400 mx-auto md:w-550 lg:w-550 xl:w-600 lg:px-14">
       {/* Primary heading */}
@@ -146,9 +145,9 @@ function Signup() {
               ref={userNameRef}
             />
           </div>
-          {errors?.userNameError && (
+          {errors?.usernameError && (
             <span className="block pl-2 text-red-600 font-semibold italic">
-              {errors?.errMsg}
+              {errors?.usernameMsg}
             </span>
           )}
         </div>
@@ -159,7 +158,7 @@ function Signup() {
           </label>
           <div
             className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${
-              errors?.fullNameError && `border-1 border-red-600`
+              errors?.nameError && `border-1 border-red-600`
             }`}
           >
             <div className="w-14 h-full  flex justify-center">
@@ -179,9 +178,9 @@ function Signup() {
               ref={nameRef}
             />
           </div>
-          {errors?.fullNameError && (
+          {errors?.nameError && (
             <span className="block pl-2 text-red-600 font-semibold italic">
-              {errors?.errMsg}
+              {errors?.nameMsg}
             </span>
           )}
         </div>
@@ -213,7 +212,7 @@ function Signup() {
           </div>
           {errors?.emailError && (
             <span className="block pl-2 text-red-600 font-semibold italic">
-              {errors?.errMsg}
+              {errors?.emailMsg}
             </span>
           )}
         </div>
@@ -222,7 +221,11 @@ function Signup() {
           <label htmlFor="password" className="font-light text-gray-800">
             Password
           </label>
-          <div className="flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500">
+          <div
+            className={`flex overflow-hidden items-center mt-2 w-full rounded-lg border border-gray-400 transition-all focus-within:shadow-lg focus-within:border-orange-500 ${
+              errors?.passwordError && `border-1 border-red-600`
+            }`}
+          >
             <div className="w-14 h-full  flex justify-center">
               <img src={lock_svg} alt="SVGICON" className="w-5" />
             </div>
@@ -252,7 +255,7 @@ function Signup() {
           </div>
           {errors?.passwordError && (
             <span className="block pl-2 text-red-600 font-semibold italic">
-              {errors?.errMsg}
+              {errors?.passwordMsg}
             </span>
           )}
         </div>
