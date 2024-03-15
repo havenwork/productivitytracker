@@ -30,7 +30,15 @@ app.use("/home", (req, res) => {
   });
 });
 
-
+// const goalModel = require("./models/goalModels");
+// const userModel = require("./models/userModels");
+// const getGoal = async () => {
+//   const getUser = await userModel.find({});
+//   const result = await goalModel.find({});
+//   console.log(`RESULT : ${result}`);
+//   console.log(`USER : ${getUser}`);
+// };
+// getGoal();
 
 const PORT = process.env.PORT || 6766;
 

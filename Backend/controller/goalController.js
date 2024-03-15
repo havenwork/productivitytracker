@@ -10,8 +10,9 @@ const createGoal = async (req, res) => {
 
         await goal.save();
         res.status(200).json({
-            msg: "success",
-            data: "Goal Created Successfully",
+            success: true,
+            msg: "Goal Created Successfully",
+            goal : goal
         });
     } catch (error) {
         res.status(400).json({ msg: false });

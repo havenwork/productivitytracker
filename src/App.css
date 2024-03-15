@@ -1,9 +1,24 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 /* Simple css loader */
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(17, 24, 39);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(253, 125, 0);
+  border-radius: 10px;
+}
+
 .loader {
   width: 12px;
   height: 12px;
@@ -21,18 +36,39 @@
 
 @keyframes animloader {
   0% {
-    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+    box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 -2px, -38px 0 0 -2px;
   }
+
   25% {
-    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 2px;
+    box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 -2px, -38px 0 0 2px;
   }
+
   50% {
-    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 2px,  -38px 0 0 -2px;
+    box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 2px, -38px 0 0 -2px;
   }
+
   75% {
-    box-shadow: 14px 0 0 2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+    box-shadow: 14px 0 0 2px, 38px 0 0 -2px, -14px 0 0 -2px, -38px 0 0 -2px;
   }
+
   100% {
-    box-shadow: 14px 0 0 -2px,  38px 0 0 2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+    box-shadow: 14px 0 0 -2px, 38px 0 0 2px, -14px 0 0 -2px, -38px 0 0 -2px;
   }
+}
+
+
+.dashboard__navlinkItem {
+  transition: all 0.5s ease-in-out;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.dashboard__navlinkItem.active {
+  background-color: #582fff;
+  border: 0;
+}
+
+.dashboard__navlinkItem:hover {
+  cursor: pointer;
+  background-color: #582fff;
+  border: 0;
 }
