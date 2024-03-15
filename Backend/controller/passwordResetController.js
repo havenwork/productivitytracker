@@ -1,8 +1,9 @@
 const crypto = require('crypto');
 const User = require('../models/userModels');
+const { sendResetPasswordEmail } = require('../utils/email');
 
 
-const generateResetToken = async (req, res) => {
+const sendPasswordResetEmail = async (req, res) => {
   try {
     const resetToken = crypto.randomBytes(20).toString('hex');
     const user = await User.findOne({ email: req.body.email });
@@ -15,7 +16,8 @@ const generateResetToken = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // Token expiry in 1 hour
     await user.save();
 
-    const emailSent = await sendPasswordResetEmail(user.email, resetToken);
+    const emailSent = await sendResetPasswordEmail(user.email, resetToken);
+    console.log('emailSent', emailSent);
     if (emailSent) {
       return res.status(200).json({ message: 'Email sent successfully' });
     } else {
@@ -31,7 +33,7 @@ const resetPassword = async (req, res) => {
   // Logic for resetting password using the token
   // Similar to the '/reset-password/:token' endpoint mentioned earlier
   // Assuming '/reset-password/:token' is the endpoint
-router.post('/reset-password/:token', async (req, res) => {
+  // router.post('/reset-password/:token', async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
@@ -58,8 +60,8 @@ router.post('/reset-password/:token', async (req, res) => {
     console.error('Error in password reset:', error);
     res.status(500).json({ error: 'Error resetting password' });
   }
-});
+  // });
 
 };
 
-module.exports = { generateResetToken, resetPassword };
+module.exports = { sendPasswordResetEmail, resetPassword };

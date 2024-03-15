@@ -1,5 +1,6 @@
 const express = require("express");
 const { signup, login, getUser } = require("../controller/authController");
+const { sendPasswordResetEmail } = require("../controller/passwordResetController");
 const authenticateUser = require("../middleware/authenticateUser");
 const { loginValidator } = require("../middleware/loginValidator");
 const { signupValidator } = require("../middleware/signupValidator");
@@ -23,7 +24,6 @@ const upload = multer({
 });
 
 
-const { sendResetPasswordEmail } = require("../utils/email");
 // const {forgotPassword} =require("../controller/authController")
 // const {resetPassword} =require("../controller/authController")
 
@@ -38,7 +38,7 @@ userRoute.get("/", authenticateUser, getUser);
 
 
 
-userRoute.post("/sendResetPasswordEmail", sendResetPasswordEmail);
+userRoute.post("/sendResetPasswordEmail", sendPasswordResetEmail);
 
 // userRoute.post("/forgotPassword",forgotPassword);
 // userRoute.post("resetPassword",resetPassword);
