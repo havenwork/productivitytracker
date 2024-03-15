@@ -14,7 +14,7 @@ const createGoal = async (req, res) => {
             data: "Goal Created Successfully",
         });
     } catch (error) {
-        res.status(400).json({ msg: false });
+        res.status(400).json({ msg: false, error: error });
     }
 
 };

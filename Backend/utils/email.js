@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-const sendResetPasswordEmail = async (email,subject) => {
+const sendResetPasswordEmail = async (email, subject) => {
   try {
     const transporter = nodemailer.createTransport({
       host: 'sandbox.smtp.mailtrap.io',
@@ -22,13 +22,15 @@ const sendResetPasswordEmail = async (email,subject) => {
     };
 
     // Sending email
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent for password reset');
-    res.status(200).send("email sent successfully")
-  
+    return await transporter.sendMail(mailOptions);
+    // console.log('Email sent for password reset');
+    // res.status(200).send("email sent successfully")
+    // return true;
+
   } catch (error) {
-    console.error('Error in forgotPassword middleware:', error);
-    res.status(500).json({ error: `${error} processing forgot password request` });
+    console.error('Error in sendResetPasswordEmail middleware:', error);
+    // res.status(500).json({ error: `${error} processing forgot password request` });
+    return false;
   }
 };
 
