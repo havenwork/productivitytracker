@@ -4,12 +4,16 @@ import { BsFillEyeFill } from "react-icons/bs";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import email_svg from "../icons/email.svg";
 import lock_svg from "../icons/lock.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import { message } from "antd";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { UserLoggedIn } from "../Redux/ReduxSlice";
 
 function LoginPage() {
+  const dispatch = useDispatch();
+const navigateTO =   useNavigate();
   const userNameRef = useRef();
   const passwordRef = useRef();
   const [ShowPassword, setShowPassword] = useState(false);
@@ -51,12 +55,13 @@ function LoginPage() {
       });
       setLoading(true);
       axios
-        .post("https://productivitytrackerbe.onrender.com/login", userDetails)
+        .post("http://localhost:6766/login", userDetails)
         .then((response) => {
           setLoading(false);
           if (response.data.errMsg === "Logged in successfully") {
             message.success(`${response.data.errMsg}`);
-            console.log(response.data);
+            dispatch(UserLoggedIn(response.data))
+            navigateTO(`/dashboard/user/${response.data.currentUser._id}`)
             handleClearFields();
           } else if (
             response.data.errMsg ===

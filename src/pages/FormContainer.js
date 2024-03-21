@@ -1,18 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import logo_svg from "../icons/logo.svg";
 import hero_png from "../icons/hero.png";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { message } from "antd";
+import ComponentLoader from "../components/ComponentLoader";
 function FormContainer() {
+  const [Loader, setLoader] = useState(false);
+  const { Token, userID } = useSelector((state) => state.productivityTracker);
   const { pathname } = useLocation();
   const navigateTO = useNavigate();
   useEffect(() => {
-    if (pathname === "/") {
-      navigateTO("/signup");
-    }
-  }, [pathname, navigateTO]);
+    setLoader(true);
+    axios
+      .post(`http://localhost:6766/verify/token`, { Token, userID })
+      .then((response) => {
+        setLoader(false);
+        if (response.data.success) {
+          navigateTO(`/dashboard/user/${response.data.userID}`);
+        } else {
+          message.error("Token Expired! Login Again");
+          navigateTO("/login");
+        }
+      })
+      .catch((err) => {
+        message.error("Token Expired! Login Again");
+        navigateTO("/login");
+        setLoader(false);
+      });
+  }, [Token, navigateTO, userID]);
   return (
     <div className="min-h-screen font-sans bg-gray-100 flex justify-between">
-      {/* FormContainer_left side */}
       <div
         className="hidden overflow-hidden  w-1/2 lg:block bg-no-repeat bg-center bg-cover relative "
         style={{ backgroundImage: `url(${hero_png})` }}
@@ -23,6 +42,7 @@ function FormContainer() {
               ? " Reset your password!"
               : "Productivity Tracker"}
           </span>
+
           <p className="font-light leading-7 text-gray-500 w-full text-center lg:text-2xl mx-auto px-16">
             {pathname === "/ResetPassword"
               ? "Optimize your online security by reconfiguring your password settings regularly."
@@ -30,19 +50,18 @@ function FormContainer() {
           </p>
         </div>
       </div>
-      {/* FormContainer_right side */}
+
       <div
         className={`min-h-screen w-full relative lg:w-1/2 lg:px-5 py-10 flex items-center`}
       >
-        {/* LOGO */}
         <img
           src={logo_svg}
           alt="Logo"
           className="w-32 absolute top-5 right-5"
         />
-        {/* outlet container*/}
-        <div className="h-full w-full flex">
-          <Outlet />
+
+        <div className="h-full w-full flex relative">
+          {Loader ? <ComponentLoader /> : <Outlet />}
         </div>
       </div>
     </div>

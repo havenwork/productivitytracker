@@ -40,7 +40,7 @@ function Signup() {
   const handleInputOnChange = (e) => {
     setErrors({});
     if (e.target.name !== "name" && e.target.value.includes(" ")) {
-      e.target.value = e.target.value.replaceAll(" ", "");
+      e.target.value = e.target.value.replace(" ", "");
     }
     setValues({ ...values, [e.target.name]: e.target.value });
   };

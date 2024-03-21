@@ -3,9 +3,9 @@ const { createGoal, goals, deleteGoal, updateGoal } = require("../controller/goa
 
 const goalRoute = express.Router();
 
-goalRoute.get("/goals", goals);
+goalRoute.get("/goals/:userID", goals);
 goalRoute.post("/create-goal", createGoal);
-goalRoute.delete("/delete-goal", deleteGoal);
+goalRoute.delete("/delete-goal/:goalID", deleteGoal);
 goalRoute.put("/update-goal", updateGoal);
 
 module.exports = {

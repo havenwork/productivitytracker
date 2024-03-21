@@ -29,7 +29,6 @@ const ForgotPassword = () => {
         abortEarly: false,
       });
     } catch (err) {
-      console.log(err)
       let newError = {};
       err.inner.forEach((item) => {
         newError[`${item.path}Error`] = true;
