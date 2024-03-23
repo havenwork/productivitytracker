@@ -1,22 +1,23 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import * as Yup from "yup";
 import background_png from "../../img/background.png";
 import Loader from "../../components/Loader";
 import axios from "axios";
-import { useSelector } from "react-redux";
-function CreateGoal({cbLoadFun,
-  cbToggleCreate}) {
-  const { userID } = useSelector((state) => state.productivityTracker);
+function UpdateGoal() {
+  const navigateTO = useNavigate();
+  const { state } = useLocation();
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState({});
+
   const [goal, setGoal] = useState({
-    user: userID, 
-    title: "",
-    priority: "",
-    status: "",
-    startDate: "",
-    endDate: "",
+    goalID: state._id,
+    title: state.title,
+    priority: state.priority,
+    status: state.status,
+    startDate: state.startDate.split("T")[0],
+    endDate: state.endDate.split("T")[0],
   });
 
   const handleInputOnChange = (e) => {
@@ -26,17 +27,19 @@ function CreateGoal({cbLoadFun,
 
   const handleClearField = () => {
     setGoal({
-      user: userID,
-      title: "",
-      priority: "Select goal priority",
-      status: "Select goal status",
-      startDate: "",
-      endDate: "",
+      goalID: state._id,
+      title: state.title,
+      priority: state.priority,
+      status: state.status,
+      startDate: state.startDate.split("T")[0],
+      endDate: state.endDate.split("T")[0],
     });
   };
 
   const signInSchema = Yup.object({
-    title: Yup.string().min(5, "Title must be 5 character long").required("Title required"),
+    title: Yup.string()
+      .min(5, "Title must be 5 character long")
+      .required("Title required"),
     priority: Yup.string().required("Priority required"),
     status: Yup.string().required("Status required"),
     startDate: Yup.string().required("Start date required"),
@@ -51,14 +54,13 @@ function CreateGoal({cbLoadFun,
       });
       setLoading(true);
       axios
-        .post("http://localhost:6766/goal/create-goal", goal)
+        .put("http://localhost:6766/goal/update-goal", goal)
         .then((response) => {
           if (response.data.success) {
             message.success(`${response.data.msg}`);
             handleClearField();
             setLoading(false);
-            cbToggleCreate(); // for  closing the credate popup
-            cbLoadFun(); // for loading latest goal data
+            navigateTO("/dashboard/user/goals");
           } else {
             message.error("Something went wrong! Try again");
             handleClearField();
@@ -75,16 +77,18 @@ function CreateGoal({cbLoadFun,
     }
   };
   return (
+    <div className="w-full min-h-full flex items-center justify-center">
       <form
         className="min-h-[550px] px-1 py-2  w-[95%] xsm:w-[400px] xsm:py-2 sm:w-[475px] mt-4 rounded-lg lg:w-10/12 2xl:w-[550px] bg-center bg-no-repeat bg-cover"
-        style={{ backgroundImage: `url(${background_png})` }}
+        style={{
+          backgroundImage: `url(${background_png})`,
+          border: "0.5px solid rgb(255,255,255, 0.2",
+        }}
       >
-        {/* createGoal form primary heading */}
         <h1 className="text-center p-2 text-sm font-medium uppercase text-white xsm:text-xl">
-          Create your goal and achieve it
+          Update your goal
         </h1>
         <hr className="mb-4" />
-        {/* createGoal__formItemRows */}
         <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
           <label
             htmlFor="title"
@@ -124,7 +128,7 @@ function CreateGoal({cbLoadFun,
               onChange={handleInputOnChange}
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
             >
-              <option value={""}>Select goal priority</option>
+              <option value={""}>{state.priority}</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
@@ -151,7 +155,7 @@ function CreateGoal({cbLoadFun,
               onChange={handleInputOnChange}
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
             >
-              <option value={""}>Select goal status</option>
+              <option value={""}>{state.status}</option>
               <option value="Todo">Todo</option>
               <option value="In Progress">In Progress</option>
               <option value="Complete">Complete</option>
@@ -177,8 +181,8 @@ function CreateGoal({cbLoadFun,
               id="startDate"
               name="startDate"
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
-              onChange={handleInputOnChange}
               value={goal.startDate}
+              readOnly
             />
             {error.startDateError && (
               <p className="block pl-2 text-red-600 font-semibold italic text-sm">
@@ -202,7 +206,7 @@ function CreateGoal({cbLoadFun,
               name="endDate"
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
               onChange={handleInputOnChange}
-              value={goal.endDate}
+              defaultValue={state.endDate.split("T")[0]}
             />
             {error.endDateError && (
               <p className="block pl-2 text-red-600 font-semibold italic text-sm">
@@ -212,14 +216,25 @@ function CreateGoal({cbLoadFun,
           </div>
         </div>
 
-        <button
-          className="block border-1 bg-green-400 w-7/12 h-[40px] mx-auto p-1 rounded-3xl font-semibold cursor-pointer hover:bg-green-500 my-5 relative"
-          onClick={handleCreateGoal}
-        >
-          {isLoading ? <Loader /> : "Create goal"}
-        </button>
+        <div className="flex justify-between items-center p-1">
+          <button
+            type="button"
+            className="block border-1 bg-red-400 w-[125px] xsm:w-[175px] h-[40px] p-1 rounded-3xl font-semibold cursor-pointer hover:bg-red-500 my-5 relative text-white"
+            onClick={() => navigateTO("/dashboard/user/goals")}
+          >
+            Back
+          </button>
+
+          <button
+            className="block border-1 bg-green-400 w-[125px] xsm:w-[175px] h-[40px] p-1 rounded-3xl font-semibold cursor-pointer hover:bg-green-500 my-5 relative"
+            onClick={handleCreateGoal}
+          >
+            {isLoading ? <Loader /> : "Update"}
+          </button>
+        </div>
       </form>
+    </div>
   );
 }
 
-export default CreateGoal;
+export default UpdateGoal;

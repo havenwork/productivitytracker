@@ -11,6 +11,7 @@ import DashboardContainer from "./pages/Dashboard/DashboardContainer";
 import Goal from "./pages/Dashboard/Goal";
 import Task from "./pages/Dashboard/Task";
 import Setting from "./pages/Dashboard/Setting";
+import UpdateGoal from "./pages/Dashboard/UpdateGoal";
 
 function App() {
   return (
@@ -27,10 +28,14 @@ function App() {
           <Route path="/dashboard" element={<DashboardContainer />}>
             <Route path="/dashboard/user/:id" element={<Dashboard />} />
             <Route path="/dashboard/user/goals" element={<Goal />} />
+            <Route
+              path="/dashboard/user/goals/update/:goalID"
+              element={<UpdateGoal />}
+            />
             <Route path="/dashboard/user/tasks" element={<Task />} />
             <Route path="/dashboard/user/setting" element={<Setting />} />
           </Route>
-          
+
           <Route path="/*" element={<Navigate to="/signup" />} />
         </Routes>
       </BrowserRouter>

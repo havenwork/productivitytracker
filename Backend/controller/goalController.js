@@ -34,20 +34,27 @@ const goals = async (req, res) => {
 
 const updateGoal = async (req, res) => {
   try {
+    const { goalID, title, priority, status, startDate, endDate } = req.body;
     const result = await goalModel.updateOne(
-      { _id: req.body.goalId },
-      req.body
+      { _id: goalID },
+      {
+        title: title,
+        priority: priority,
+        status: status,
+        startDate: startDate,
+        endDate: endDate,
+      }
     );
-    if (result.modifiedCount === 1) {
-      res.status(200).json({
-        msg: "success",
-        data: "Goal Updated Successfully",
-      });
-    } else {
-      res.status(400).json({
-        msg: "error",
-        data: "Goal Not Found",
-      });
+    if(result.acknowledged){
+      res.send({
+        success : true,
+        msg : "Goal Updated Successfully"
+      })
+    }else{
+      res.send({
+        success : false,
+        msg : "Goal not found"
+      })
     }
   } catch (error) {
     res.status(400).json({ msg: false });

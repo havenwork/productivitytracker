@@ -173,10 +173,18 @@ function Goal() {
 
                           <button
                             type="button"
-                            className="h-[60px] absolute bottom-0 border-t text-xl font-semibold block w-full rounded-b-md p-2 hover:text-orange-400"
+                            className="absolute w-[120px] bottom-0 left-0 border text-sm font-semibold rounded-b-md p-2 hover:text-orange-400"
                           >
                             View Details
                           </button>
+                          <Link
+                          to={`/dashboard/user/goals/update/${goal._id}`}
+                            type="button"
+                            className="block text-center absolute w-[120px] bottom-0 right-0 border text-sm font-semibold rounded-b-md p-2 hover:text-green-400"
+                            state={goal}
+                          >
+                            Update goal
+                          </Link>
                         </div>
                       );
                     })}
