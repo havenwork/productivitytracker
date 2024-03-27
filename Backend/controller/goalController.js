@@ -1,4 +1,5 @@
 const goalModel = require("../models/goalModels");
+const taskModels = require("../models/taskModels");
 
 const createGoal = async (req, res) => {
   try {
@@ -45,16 +46,16 @@ const updateGoal = async (req, res) => {
         endDate: endDate,
       }
     );
-    if(result.acknowledged){
+    if (result.acknowledged) {
       res.send({
-        success : true,
-        msg : "Goal Updated Successfully"
-      })
-    }else{
+        success: true,
+        msg: "Goal Updated Successfully",
+      });
+    } else {
       res.send({
-        success : false,
-        msg : "Goal not found"
-      })
+        success: false,
+        msg: "Goal not found",
+      });
     }
   } catch (error) {
     res.status(400).json({ msg: false });
@@ -63,16 +64,27 @@ const updateGoal = async (req, res) => {
 
 const deleteGoal = async (req, res) => {
   try {
-    const result = await goalModel.deleteOne({ _id: req.params.goalID });
-    if (result.acknowledged) {
-      res.status(200).json({
-        success: true,
-        resMsg: "Goal Deleted Successfully",
-      });
-    } else {
+    const deleteRelatedTasks = await taskModels.deleteMany({
+      goal: req.params.goalID,
+    });
+
+    if (deleteRelatedTasks.acknowledged) {
+      const result = await goalModel.deleteOne({ _id: req.params.goalID });
+      if (result.acknowledged) {
+        res.status(200).json({
+          success: true,
+          resMsg: "Goal Deleted Successfully",
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          resMsg: "Goal not found",
+        });
+      }
+    }else{
       res.status(400).json({
         success: false,
-        resMsg: "Goal not found",
+        resMsg: "Try Again",
       });
     }
   } catch (error) {

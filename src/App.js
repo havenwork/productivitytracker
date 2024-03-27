@@ -12,6 +12,8 @@ import Goal from "./pages/Dashboard/Goal";
 import Task from "./pages/Dashboard/Task";
 import Setting from "./pages/Dashboard/Setting";
 import UpdateGoal from "./pages/Dashboard/UpdateGoal";
+import DetailsGoalView from "./pages/Dashboard/DetailsGoalView";
+import UpdateTask from "./pages/Dashboard/UpdateTask";
 
 function App() {
   return (
@@ -28,9 +30,19 @@ function App() {
           <Route path="/dashboard" element={<DashboardContainer />}>
             <Route path="/dashboard/user/:id" element={<Dashboard />} />
             <Route path="/dashboard/user/goals" element={<Goal />} />
+            
             <Route
-              path="/dashboard/user/goals/update/:goalID"
+              path="/dashboard/user/goal/update/:goalID"
               element={<UpdateGoal />}
+            />
+            <Route
+              path="/dashboard/user/task/update/:taskID"
+              element={<UpdateTask />}
+            />
+            
+            <Route
+              path="/dashboard/user/:types/:goalID"
+              element={<DetailsGoalView/>}
             />
             <Route path="/dashboard/user/tasks" element={<Task />} />
             <Route path="/dashboard/user/setting" element={<Setting />} />

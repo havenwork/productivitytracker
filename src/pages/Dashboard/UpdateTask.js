@@ -1,66 +1,73 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { message } from "antd";
 import * as Yup from "yup";
-import background_png from "../../img/background.png";
 import Loader from "../../components/Loader";
+import background_png from "../../img/background.png";
 import axios from "axios";
-function UpdateGoal() {
+import { useLocation, useNavigate } from "react-router-dom";
+
+function UpdateTask({ taskID, cbFun, cbLoadFun }) {
   const navigateTO = useNavigate();
   const { state } = useLocation();
+  const { userID } = useSelector((state) => state.productivityTracker);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState({});
+  const [goalOptions, setGoalgoalOptions] = useState([]);
 
-  const [goal, setGoal] = useState({
-    goalID: state._id,
-    title: state.title,
-    priority: state.priority,
-    status: state.status,
-    startDate: state.startDate.split("T")[0],
-    endDate: state.endDate.split("T")[0],
+  const [taskDetails, setTaskDetails] = useState({
+    user: userID,
+    goal: taskID,
+    title: "",
+    status: "",
+    description: "",
+    startDate: "",
+    endDate: "",
   });
 
   const handleInputOnChange = (e) => {
     setError({});
-    setGoal({ ...goal, [e.target.name]: e.target.value });
+    setTaskDetails({ ...taskDetails, [e.target.name]: e.target.value });
   };
 
   const handleClearField = () => {
-    setGoal({
-      goalID: state._id,
-      title: state.title,
-      priority: state.priority,
-      status: state.status,
-      startDate: state.startDate.split("T")[0],
-      endDate: state.endDate.split("T")[0],
+    setTaskDetails({
+      user: userID,
+      goal: "",
+      title: "",
+      status: "",
+      description: "",
+      startDate: "",
+      endDate: "",
     });
   };
 
-  const signInSchema = Yup.object({
+  const taskDetailsSchema = Yup.object({
     title: Yup.string()
       .min(5, "Title must be 5 character long")
       .required("Title required"),
-    priority: Yup.string().required("Priority required"),
     status: Yup.string().required("Status required"),
     startDate: Yup.string().required("Start date required"),
     endDate: Yup.string().required("End date required"),
+    description: Yup.string().required("Description required"),
   });
 
-  const handleCreateGoal = async (e) => {
+  const handleCreateTask = async (e) => {
     e.preventDefault();
     try {
-      await signInSchema.validate(goal, {
+      await taskDetailsSchema.validate(taskDetails, {
         abortEarly: false,
       });
       setLoading(true);
       axios
-        .put("http://localhost:6766/goal/update-goal", goal)
+        .post("http://localhost:6766/task/create-task", taskDetails)
         .then((response) => {
           if (response.data.success) {
             message.success(`${response.data.msg}`);
             handleClearField();
             setLoading(false);
-            navigateTO("/dashboard/user/goals");
+            cbFun(); // for  closing the credate popup
+            cbLoadFun(); // for loading latest goal details
           } else {
             message.error("Something went wrong! Try again");
             handleClearField();
@@ -76,6 +83,19 @@ function UpdateGoal() {
       setError(newError);
     }
   };
+
+  useEffect(() => {
+    if (!taskID) {
+      axios
+        .get(`http://localhost:6766/goal/goals/${userID}`)
+        .then((response) => {
+          setGoalgoalOptions(response.data.goals);
+        });
+    } else {
+      setTaskDetails({ ...taskDetails, goal: taskID });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userID, taskID]);
   return (
     <div className="w-full min-h-full flex items-center justify-center">
       <form
@@ -86,9 +106,8 @@ function UpdateGoal() {
         }}
       >
         <h1 className="text-center p-2 text-sm font-medium uppercase text-white xsm:text-xl">
-          Update your goal
+          Update your Task
         </h1>
-        <hr className="mb-4" />
         <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
           <label
             htmlFor="title"
@@ -102,9 +121,9 @@ function UpdateGoal() {
               id="title"
               name="title"
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
-              placeholder="Enter goal title"
+              placeholder="Enter task title"
               onChange={handleInputOnChange}
-              value={goal.title}
+              value={taskDetails.title}
             />
             {error.titleError && (
               <p className="block pl-2 text-red-600 font-semibold italic text-sm">
@@ -114,32 +133,38 @@ function UpdateGoal() {
           </div>
         </div>
 
-        <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
-          <label
-            htmlFor="priority"
-            className="block w-full pl-2 font-medium text-white"
-          >
-            Priority*
-          </label>
-          <div className="h-[60px]">
-            <select
-              name="priority"
-              id="priority"
-              onChange={handleInputOnChange}
-              className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
+        {!taskID && (
+          <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
+            <label
+              htmlFor="priority"
+              className="block w-full pl-2 font-medium text-white"
             >
-              <option value={""}>{state.priority}</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
-            {error.statusError && (
-              <p className="block pl-2 text-red-600 font-semibold italic text-sm">
-                {error.statusMsg}
-              </p>
-            )}
+              Goal*
+            </label>
+            <div className="h-[60px]">
+              <select
+                name="goal"
+                id="goal"
+                onChange={handleInputOnChange}
+                className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
+              >
+                <option value="">Select your goal</option>
+                {goalOptions?.map((options, index) => {
+                  return (
+                    <option key={index} value={options._id}>
+                      {options.title}
+                    </option>
+                  );
+                })}
+              </select>
+              {error.statusError && (
+                <p className="block pl-2 text-red-600 font-semibold italic text-sm">
+                  {error.statusMsg}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
           <label
@@ -155,7 +180,7 @@ function UpdateGoal() {
               onChange={handleInputOnChange}
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
             >
-              <option value={""}>{state.status}</option>
+              <option value={""}>Select task status</option>
               <option value="Todo">Todo</option>
               <option value="In Progress">In Progress</option>
               <option value="Complete">Complete</option>
@@ -181,8 +206,8 @@ function UpdateGoal() {
               id="startDate"
               name="startDate"
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
-              value={goal.startDate}
-              readOnly
+              onChange={handleInputOnChange}
+              value={taskDetails.startDate}
             />
             {error.startDateError && (
               <p className="block pl-2 text-red-600 font-semibold italic text-sm">
@@ -206,11 +231,34 @@ function UpdateGoal() {
               name="endDate"
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
               onChange={handleInputOnChange}
-              defaultValue={state.endDate.split("T")[0]}
+              value={taskDetails.endDate}
             />
             {error.endDateError && (
               <p className="block pl-2 text-red-600 font-semibold italic text-sm">
                 {error.endDateMsg}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="w-full my-2 min-h-[150px] xsm:w-11/12 xsm:mx-auto">
+          <label
+            htmlFor="endDate"
+            className="block w-full pl-2 font-medium text-white"
+          >
+            Description*
+          </label>
+          <div className="h-[240px]">
+            <textarea
+              placeholder="Short description of your task"
+              name="description"
+              className="h-[220px] h resize-none block mx-auto px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
+              onChange={handleInputOnChange}
+              value={taskDetails.description}
+            ></textarea>
+            {error.descriptionError && (
+              <p className="block pl-2 text-red-600 font-semibold italic text-sm">
+                {error.descriptionMsg}
               </p>
             )}
           </div>
@@ -227,7 +275,7 @@ function UpdateGoal() {
 
           <button
             className="block border-1 bg-green-400 w-[125px] xsm:w-[175px] h-[40px] p-1 rounded-3xl font-semibold cursor-pointer hover:bg-green-500 my-5 relative"
-            onClick={handleCreateGoal}
+            onClick={handleCreateTask}
           >
             {isLoading ? <Loader /> : "Update"}
           </button>
@@ -237,5 +285,4 @@ function UpdateGoal() {
   );
 }
 
-export default UpdateGoal;
-
+export default UpdateTask;
