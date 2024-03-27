@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
 import { message } from "antd";
 import * as Yup from "yup";
 import Loader from "../../components/Loader";
@@ -7,22 +6,19 @@ import background_png from "../../img/background.png";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
-function UpdateTask({ taskID, cbFun, cbLoadFun }) {
+function UpdateTask() {
   const navigateTO = useNavigate();
   const { state } = useLocation();
-  const { userID } = useSelector((state) => state.productivityTracker);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState({});
-  const [goalOptions, setGoalgoalOptions] = useState([]);
 
   const [taskDetails, setTaskDetails] = useState({
-    user: userID,
-    goal: taskID,
-    title: "",
-    status: "",
-    description: "",
-    startDate: "",
-    endDate: "",
+    taskId: state._id,
+    title: state.title,
+    status: state.status,
+    startDate: state.startDate.split("T")[0],
+    endDate: state.endDate.split("T")[0],
+    description: state.description,
   });
 
   const handleInputOnChange = (e) => {
@@ -32,13 +28,12 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
 
   const handleClearField = () => {
     setTaskDetails({
-      user: userID,
-      goal: "",
-      title: "",
-      status: "",
-      description: "",
-      startDate: "",
-      endDate: "",
+      taskId: state._id,
+      title: state.title,
+      status: state.status,
+      startDate: state.startDate.split("T")[0],
+      endDate: state.endDate.split("T")[0],
+      description: state.description,
     });
   };
 
@@ -52,7 +47,7 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
     description: Yup.string().required("Description required"),
   });
 
-  const handleCreateTask = async (e) => {
+  const handleUpdateTaskClick = async (e) => {
     e.preventDefault();
     try {
       await taskDetailsSchema.validate(taskDetails, {
@@ -60,14 +55,13 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
       });
       setLoading(true);
       axios
-        .post("http://localhost:6766/task/create-task", taskDetails)
+        .put("http://localhost:6766/task/update-task", taskDetails)
         .then((response) => {
           if (response.data.success) {
             message.success(`${response.data.msg}`);
             handleClearField();
             setLoading(false);
-            cbFun(); // for  closing the credate popup
-            cbLoadFun(); // for loading latest goal details
+            navigateTO(-1)
           } else {
             message.error("Something went wrong! Try again");
             handleClearField();
@@ -84,18 +78,6 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
     }
   };
 
-  useEffect(() => {
-    if (!taskID) {
-      axios
-        .get(`http://localhost:6766/goal/goals/${userID}`)
-        .then((response) => {
-          setGoalgoalOptions(response.data.goals);
-        });
-    } else {
-      setTaskDetails({ ...taskDetails, goal: taskID });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, taskID]);
   return (
     <div className="w-full min-h-full flex items-center justify-center">
       <form
@@ -133,39 +115,6 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
           </div>
         </div>
 
-        {!taskID && (
-          <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
-            <label
-              htmlFor="priority"
-              className="block w-full pl-2 font-medium text-white"
-            >
-              Goal*
-            </label>
-            <div className="h-[60px]">
-              <select
-                name="goal"
-                id="goal"
-                onChange={handleInputOnChange}
-                className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
-              >
-                <option value="">Select your goal</option>
-                {goalOptions?.map((options, index) => {
-                  return (
-                    <option key={index} value={options._id}>
-                      {options.title}
-                    </option>
-                  );
-                })}
-              </select>
-              {error.statusError && (
-                <p className="block pl-2 text-red-600 font-semibold italic text-sm">
-                  {error.statusMsg}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
         <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
           <label
             htmlFor="status"
@@ -180,7 +129,7 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
               onChange={handleInputOnChange}
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none cursor-pointer"
             >
-              <option value={""}>Select task status</option>
+              <option value={""}>{state.status}</option>
               <option value="Todo">Todo</option>
               <option value="In Progress">In Progress</option>
               <option value="Complete">Complete</option>
@@ -206,7 +155,7 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
               id="startDate"
               name="startDate"
               className="px-2 py-1 w-full font-semibold border border-black rounded-md focus:outline-none"
-              onChange={handleInputOnChange}
+              readOnly
               value={taskDetails.startDate}
             />
             {error.startDateError && (
@@ -275,7 +224,7 @@ function UpdateTask({ taskID, cbFun, cbLoadFun }) {
 
           <button
             className="block border-1 bg-green-400 w-[125px] xsm:w-[175px] h-[40px] p-1 rounded-3xl font-semibold cursor-pointer hover:bg-green-500 my-5 relative"
-            onClick={handleCreateTask}
+            onClick={handleUpdateTaskClick}
           >
             {isLoading ? <Loader /> : "Update"}
           </button>

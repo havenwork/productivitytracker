@@ -68,11 +68,7 @@ function Task() {
       </h1>
 
       <div
-        className={`relative min-h-[calc(100%-90px)] ${
-          allTasks.length === 0
-            ? "flex items-center justify-center"
-            : "grid gap-5 grid-cols-1 p-2 content-center xsm:grid-cols-[420px] sm:grid-cols-2 justify-center items-center"
-        }`}
+          className={`relative min-h-[calc(100%-90px)] flex items-center justify-evenly flex-wrap gap-6`}
       >
         {Loader ? (
           <ComponentLoader />

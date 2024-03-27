@@ -155,11 +155,7 @@ function DetailsGoalView() {
             </h3>
 
             <div
-              className={`relative min-h-[220px] ${
-                tasks.length === 0
-                  ? "flex items-center justify-center"
-                  : "grid gap-5 grid-cols-1 p-2 content-center xsm:grid-cols-[420px] sm:grid-cols-2 justify-center items-center"
-              }`}
+            className={`relative min-h-[230px] flex items-center justify-evenly flex-wrap gap-3`}
             >
               {loading ? (
                 <ComponentLoader />

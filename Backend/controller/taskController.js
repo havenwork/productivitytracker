@@ -62,19 +62,26 @@ const allTasks = async (req, res) => {
 
 const updateTask = async (req, res) => {
   try {
+    const { taskId, title, description, status, startDate, endDate } = req.body;
     const result = await taskModel.updateOne(
-      { _id: req.body.taskId },
-      req.body
+      { _id: taskId },
+      {
+        title: title,
+        status: status,
+        startDate: startDate,
+        endDate: endDate,
+        description: description,
+      }
     );
-    if (result.modifiedCount === 1) {
-      res.status(200).json({
-        msg: "success",
-        data: "Task Updated Successfully",
+    if (result.acknowledged) {
+      res.send({
+        success: true,
+        msg: "Task Updated Successfully",
       });
     } else {
-      res.status(400).json({
-        msg: "error",
-        data: "Task Not Found",
+      res.send({
+        success: false,
+        msg: "Task not found",
       });
     }
   } catch (error) {

@@ -54,7 +54,8 @@ function Card({ data, cardType, cbLoadTask }) {
 
   return (
     <div
-      className="border w-[98%] h-[320px] mt-2 rounded-md xsm:w-full relative"
+      className="border w-[95%] h-[320px] mt-2 rounded-md xsm:w-[420px] relative"
+
       style={{
         borderColor: "rgb(255, 255, 255, 0.2",
         backgroundColor: "rgb(255, 255, 255, 0.05)",

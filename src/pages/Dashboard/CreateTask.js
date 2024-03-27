@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import background_png from "../../img/background.png";
 import axios from "axios";
 
-function CreateTask({ taskID, cbFun, cbLoadFun }) {
+function CreateTask({ goalID, cbFun, cbLoadFun }) {
   const { userID } = useSelector((state) => state.productivityTracker);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState({});
@@ -14,7 +14,7 @@ function CreateTask({ taskID, cbFun, cbLoadFun }) {
 
   const [taskDetails, setTaskDetails] = useState({
     user: userID,
-    goal: taskID,
+    goal: goalID,
     title: "",
     status: "",
     description: "",
@@ -82,17 +82,17 @@ function CreateTask({ taskID, cbFun, cbLoadFun }) {
   };
 
   useEffect(() => {
-    if (!taskID) {
+    if (!goalID) {
       axios
         .get(`http://localhost:6766/goal/goals/${userID}`)
         .then((response) => {
           setGoalgoalOptions(response.data.goals);
         });
     } else {
-      setTaskDetails({ ...taskDetails, goal: taskID });
+      setTaskDetails({ ...taskDetails, goal: goalID });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, taskID]);
+  }, [userID, goalID]);
   return (
     <div className="w-full h-full">
       <form
@@ -124,10 +124,10 @@ function CreateTask({ taskID, cbFun, cbLoadFun }) {
           </div>
         </div>
 
-        {!taskID && (
+        {!goalID && (
           <div className="w-full my-2 h-[90px] xsm:w-11/12 xsm:mx-auto">
             <label
-              htmlFor="priority"
+              htmlFor="goal"
               className="block w-full pl-2 font-medium text-white"
             >
               Goal*

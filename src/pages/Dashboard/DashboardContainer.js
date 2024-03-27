@@ -37,7 +37,7 @@ function DashboardContainer() {
         <RemindTwo />
       </div>
 
-      <div className="h-full w-full xl:w-[calc(100%-650px)]">
+      <div className="h-full w-full xl:w-[calc(100%-350px)]">
         <div className="overflow-hidden overflow-y-auto h-[calc(100dvh-90px)] relative">
           {Loader ? <ComponentLoader /> : <Outlet />}
         </div>
@@ -48,10 +48,6 @@ function DashboardContainer() {
         >
           <Navbardashboard />
         </div>
-      </div>
-
-      <div className="h-full w-[320px] text-white hidden xl:block  overflow-hidden overflow-y-auto">
-        <RemindTwo />
       </div>
     </div>
   );
