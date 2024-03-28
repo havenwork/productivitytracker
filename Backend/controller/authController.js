@@ -49,7 +49,6 @@ const login = async (req, res) => {
     const isUserRegistered = await userModel.findOne({
       $or: [{ email: { $eq: username } }, { username: username }],
     });
-    console.log(!isUserRegistered)
     if (!isUserRegistered) {
       return res.json({
         success: false,
@@ -83,7 +82,8 @@ const login = async (req, res) => {
     return res.status(200).json({
       success: true,
         errMsg: "Logged in successfully",
-        currentUser : isUserRegistered
+        currentUser : isUserRegistered,
+        token : token
     })
   } catch (error) {
     res.status(400).json({
@@ -95,19 +95,19 @@ const login = async (req, res) => {
 
 // user details
 const getUser = async (req, res) => {
-  const username = req.user.username;
-  console.log("Username:", username);
-
+  const id = req.params.id;
   try {
-    const userData = await userModel.findOne({ username });
+    const userData = await userModel.findOne({ _id : id });
 
     if (!userData) {
       return res.status(404).send({ msg: "User not found" });
     }
 
+    userData.bio = "none"
+    userData.image = ""
     res.status(200).send({
       msg: "Success",
-      data: userData,
+    user : userData
     });
   } catch (err) {
     res.status(501).send({ msg: err.message });

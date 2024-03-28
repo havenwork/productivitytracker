@@ -34,7 +34,8 @@ const userRoute = express.Router();
 userRoute.post("/signup", upload.single('image'), signupValidator, signup);
 
 userRoute.post("/login", loginValidator, login);
-userRoute.get("/", authenticateUser, getUser);
+userRoute.get("/:id", getUser);
+
 
 
 

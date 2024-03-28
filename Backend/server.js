@@ -5,6 +5,7 @@ const databaseConnect = require("./config/db_config");
 const { userRoute } = require("./routers/authRouters");
 const { goalRoute } = require("./routers/goalRouters");
 const { taskRouter } = require("./routers/taskRouters");
+const { verifyJWT } = require("./controller/jwtVerification");
 
 require("dotenv").config({ path: "./config.env" });
 
@@ -13,13 +14,13 @@ databaseConnect();
 
 app.use(
   cors({
-    // origin: process.env.CLIENT_URL,
-    origin: "*", //giving access to all domain users
+    origin: "*",
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use(express.json());
+app.use("/verify/token", verifyJWT);
 app.use("/", userRoute);
 app.use("/goal", goalRoute);
 app.use("/task", taskRouter);
@@ -29,9 +30,6 @@ app.use("/home", (req, res) => {
     data: "user management like application",
   });
 });
-
-
-
 const PORT = process.env.PORT || 6766;
 
 app.listen(PORT, () => {
