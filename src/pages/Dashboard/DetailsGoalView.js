@@ -7,7 +7,8 @@ import { IoCloseCircleSharp } from "react-icons/io5";
 import axios from "axios";
 import Card from "../../components/Card";
 import CreateTask from "./CreateTask";
-
+import calculateDays from "../../helpers/CalculateDays";
+import { SlCalender } from "react-icons/sl";
 function DetailsGoalView() {
   const { types } = useParams();
   const { state } = useLocation();
@@ -46,6 +47,7 @@ function DetailsGoalView() {
         >
           <IoMdArrowBack /> Back
         </button>
+
         <h1 className="p-2 text-center min-h-[40px] flex items-center justify-center border-b border-b-zinc-400">
           <span className="uppercase font-semibold mr-2 text-orange-400">
             {types} -{" "}
@@ -53,7 +55,7 @@ function DetailsGoalView() {
           {state?.title}
         </h1>
 
-        <div className="my-2 h-[60px] px-1 flex items-center justify-between">
+        <div className="my-2 h-[65px] px-1 flex items-center justify-between">
           <p
             className="flex flex-col items-center justify-center w-[120px] h-full rounded-md gap-1"
             style={{ background: "rgb(255,255,255,0.05" }}
@@ -77,15 +79,14 @@ function DetailsGoalView() {
           </p>
         </div>
 
-        <p
-          className="h-[80px] w-[120px] my-6 mx-auto flex flex-col items-center justify-center gap-1 rounded-md"
-          style={{ border: "0.3px solid rgb(255,255,255,0.3" }}
-        >
-          <span className="font-light text-sm">Days Overdue</span>
-          <span className="text-xl font-semibold">0</span>
+        <p className="my-10 px-2 flex items-center justify-center gap-2">
+          <SlCalender className="text-sm" />
+          <span className="mr-2 font-semibold text-sm">
+            {calculateDays(state?.endDate.split("T")[0])}
+          </span>
         </p>
 
-        <div className="my-2 h-[60px] px-1 flex items-center justify-between">
+        <div className="my-2 h-[65px] flex items-center justify-between">
           <p
             className="flex flex-col items-center justify-center w-[120px] h-full rounded-md gap-1"
             style={{ background: "rgb(255,255,255,0.05" }}
@@ -155,7 +156,7 @@ function DetailsGoalView() {
             </h3>
 
             <div
-            className={`relative min-h-[230px] flex items-center justify-evenly flex-wrap gap-3`}
+              className={`relative min-h-[230px] flex items-center justify-evenly flex-wrap gap-3`}
             >
               {loading ? (
                 <ComponentLoader />

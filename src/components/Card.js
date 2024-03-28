@@ -4,6 +4,7 @@ import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import { message } from "antd";
 import { useCallback } from "react";
+import calculateDays from "../helpers/CalculateDays";
 
 function Card({ data, cardType, cbLoadTask }) {
 
@@ -25,23 +26,26 @@ function Card({ data, cardType, cbLoadTask }) {
       });
   };
 
-  const handleDeleteTask = useCallback((taskID) => {
-    axios
-      .delete(`http://localhost:6766/task/delete-task/${taskID}`)
-      .then((response) => {
-        if (response.data.success) {
-          message.success("Task deleted successfully");
+  const handleDeleteTask = useCallback(
+    (taskID) => {
+      axios
+        .delete(`http://localhost:6766/task/delete-task/${taskID}`)
+        .then((response) => {
+          if (response.data.success) {
+            message.success("Task deleted successfully");
+            cbLoadTask();
+          } else {
+            message.error("Task not found");
+            cbLoadTask();
+          }
+        })
+        .catch((err) => {
+          message.error(`Something went wrong! ${err.message}`);
           cbLoadTask();
-        } else {
-          message.error("Task not found");
-          cbLoadTask();
-        }
-      })
-      .catch((err) => {
-        message.error(`Something went wrong! ${err.message}`);
-        cbLoadTask();
-      });
-  }, [cbLoadTask])
+        });
+    },
+    [cbLoadTask]
+  );
 
   const handleDeleteFeature = (e, id) => {
     e.preventDefault();
@@ -52,10 +56,11 @@ function Card({ data, cardType, cbLoadTask }) {
     }
   };
 
+
+
   return (
     <div
       className="border w-[95%] h-[320px] mt-2 rounded-md xsm:w-[420px] relative"
-
       style={{
         borderColor: "rgb(255, 255, 255, 0.2",
         backgroundColor: "rgb(255, 255, 255, 0.05)",
@@ -114,10 +119,9 @@ function Card({ data, cardType, cbLoadTask }) {
         </p>
       </div>
 
-      <p className="my-5 px-2 flex items-center justify-center gap-2">
+      <p className="my-10 px-2 flex items-center justify-center gap-2">
         <SlCalender className="text-sm" />
-        <span className="mr-2 font-semibold text-lg">0</span>
-        Days Overdue
+        <span className="mr-2 font-semibold text-sm">{calculateDays(data?.endDate.split("T")[0])}</span>
       </p>
 
       <Link
